@@ -1,11 +1,18 @@
 package com.thesis.ecoursemanagement.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 public class UserCreateRequest {
+    @NotBlank(message = "Username can not be empty!")
     private String username;
+    @Size(min = 6, message = "Password must be at least 6 letters!")
     private String password;
+    @NotBlank(message = "FirstName can not be empty!")
     private String firstName;
+    @NotBlank(message = "LastName can not be empty!")
     private String lastName;
     private LocalDate dob;
 

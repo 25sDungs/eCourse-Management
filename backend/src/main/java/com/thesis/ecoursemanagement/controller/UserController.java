@@ -4,6 +4,7 @@ import com.thesis.ecoursemanagement.dto.request.UserCreateRequest;
 import com.thesis.ecoursemanagement.dto.request.UserUpdateRequest;
 import com.thesis.ecoursemanagement.model.User;
 import com.thesis.ecoursemanagement.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    User createUser(@RequestBody UserCreateRequest request) {
+    User createUser(@RequestBody @Valid UserCreateRequest request) {
         return userService.createUser(request);
     }
 
