@@ -5,16 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUpdateRequest {
-    private String password;
-    private String firstName;
-    private String lastName;
-    private LocalDate dob;
-
+public class ApiResponse<T> {
+    private int codeResponse = 200;
+    private String message = "";
+    private T result;
 }
