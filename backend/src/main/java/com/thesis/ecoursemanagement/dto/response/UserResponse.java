@@ -1,5 +1,6 @@
 package com.thesis.ecoursemanagement.dto.response;
 
+import com.thesis.ecoursemanagement.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,5 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private LocalDate dob;
+//    private Role role;
 }

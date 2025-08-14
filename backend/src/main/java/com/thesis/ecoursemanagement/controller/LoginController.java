@@ -6,6 +6,7 @@ import com.thesis.ecoursemanagement.dto.response.LoginResponse;
 import com.thesis.ecoursemanagement.service.LoginAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +16,11 @@ public class LoginController {
     private final LoginAuthService loginAuthService;
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody @Valid LoginRequest request) {
-        return loginAuthService.login(request);
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(loginAuthService.login(request));
     }
+//    @PostMapping("/login")
+//    public LoginResponse login(@RequestBody @Valid LoginRequest request) {
+//        return loginAuthService.login(request);
+//    }
 }
