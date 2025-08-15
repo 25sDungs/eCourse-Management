@@ -71,16 +71,9 @@ public class ClassController {
         return ResponseEntity.ok(response);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ClassResponse> updateClass(
-//            @PathVariable Long id,
-//            @Valid @RequestBody ClassCreateRequest request) {
-//        return ResponseEntity.ok(classService.updateClass(id, request));
-//    }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClass(@PathVariable Long id) {
+    public String deleteClass(@PathVariable Long id) {
         classService.deleteClass(id);
-        return ResponseEntity.noContent().build();
+        return "Class Deleted";
     }
 }
