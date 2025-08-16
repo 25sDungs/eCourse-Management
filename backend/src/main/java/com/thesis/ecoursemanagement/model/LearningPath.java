@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "learning_paths")
-
 public class LearningPath {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

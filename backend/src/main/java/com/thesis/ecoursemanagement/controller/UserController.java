@@ -1,10 +1,9 @@
 package com.thesis.ecoursemanagement.controller;
 
-import com.thesis.ecoursemanagement.dto.request.ApiResponse;
+import com.thesis.ecoursemanagement.dto.response.ApiResponse;
 import com.thesis.ecoursemanagement.dto.request.UserCreateRequest;
 import com.thesis.ecoursemanagement.dto.request.UserUpdateRequest;
 import com.thesis.ecoursemanagement.dto.response.UserResponse;
-import com.thesis.ecoursemanagement.model.User;
 import com.thesis.ecoursemanagement.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

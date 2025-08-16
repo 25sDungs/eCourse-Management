@@ -1,7 +1,7 @@
 package com.thesis.ecoursemanagement.controller;
 
-import com.thesis.ecoursemanagement.dto.request.ApiResponse;
-import com.thesis.ecoursemanagement.dto.request.ClassCreateRequest;
+import com.thesis.ecoursemanagement.dto.response.ApiResponse;
+import com.thesis.ecoursemanagement.dto.request.ClassRequest;
 import com.thesis.ecoursemanagement.dto.response.ClassResponse;
 import com.thesis.ecoursemanagement.model.ClassEntity;
 import com.thesis.ecoursemanagement.service.ClassService;
@@ -12,68 +12,66 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/classes")
+@RequestMapping("/api/courses/{courseId}/classes")
 @RequiredArgsConstructor
 public class ClassController {
 
     private final ClassService classService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<ClassResponse>>> getAllClasses(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<ClassResponse> classes = classService.getAllClasses(page, size);
-        ApiResponse<Page<ClassResponse>> response = ApiResponse.<Page<ClassResponse>>builder()
+    public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllClassesByCourse(@PathVariable Long courseId) {
+        List<ClassResponse> classes = classService.getAllClassesByCourse(courseId);
+        return ResponseEntity.ok(ApiResponse.<List<ClassResponse>>builder()
                 .codeResponse(HttpStatus.OK.value())
                 .message("Classes retrieved successfully")
                 .result(classes)
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     @PostMapping
-    public ResponseEntity<ClassEntity> createClass(@RequestBody ClassEntity classEntity) {
-        return ResponseEntity.ok(classService.createClass(classEntity));
+    public ResponseEntity<ApiResponse<ClassResponse>> createClass(
+            @PathVariable Long courseId,
+            @Valid @RequestBody ClassRequest request) {
+        ClassResponse classResponse = classService.createClass(courseId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<ClassResponse>builder()
+                .codeResponse(HttpStatus.CREATED.value())
+                .message("Class created successfully")
+                .result(classResponse)
+                .build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ClassResponse>> getClassById(@PathVariable Long id) {
-        return classService.getClassById(id)
-                .map(classResponse -> {
-                    ApiResponse<ClassResponse> response = ApiResponse.<ClassResponse>builder()
-                            .codeResponse(HttpStatus.OK.value())
-                            .message("Class retrieved successfully")
-                            .result(classResponse)
-                            .build();
-                    return ResponseEntity.ok(response);
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(ApiResponse.<ClassResponse>builder()
-                                .codeResponse(HttpStatus.NOT_FOUND.value())
-                                .message("Class not found")
-                                .result(null)
-                                .build()));
+    public ResponseEntity<ApiResponse<ClassResponse>> getClassById(
+            @PathVariable Long courseId, @PathVariable Long id) {
+        ClassResponse classResponse = classService.getClassById(courseId, id);
+        return ResponseEntity.ok(ApiResponse.<ClassResponse>builder()
+                .codeResponse(HttpStatus.OK.value())
+                .message("Class retrieved successfully")
+                .result(classResponse)
+                .build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ClassResponse>> updateClass(
-            @PathVariable Long id,
-            @Valid @RequestBody ClassCreateRequest request) {
-        ClassResponse classResponse = classService.updateClass(id, request);
-
-        ApiResponse<ClassResponse> response = ApiResponse.<ClassResponse>builder()
+            @PathVariable Long courseId, @PathVariable Long id,
+            @Valid @RequestBody ClassRequest request) {
+        ClassResponse classResponse = classService.updateClass(courseId, id, request);
+        return ResponseEntity.ok(ApiResponse.<ClassResponse>builder()
                 .codeResponse(HttpStatus.OK.value())
                 .message("Class updated successfully")
                 .result(classResponse)
-                .build();
-
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     @DeleteMapping("/{id}")
-    public String deleteClass(@PathVariable Long id) {
-        classService.deleteClass(id);
-        return "Class Deleted";
+    public ResponseEntity<ApiResponse<Void>> deleteClass(@PathVariable Long courseId, @PathVariable Long id) {
+        classService.deleteClass(courseId, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.<Void>builder()
+                .codeResponse(HttpStatus.NO_CONTENT.value()).message("Class deleted successfully").result(null)
+                .build());
     }
+
 }

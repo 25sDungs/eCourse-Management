@@ -1,6 +1,5 @@
 package com.thesis.ecoursemanagement.service;
 
-import com.thesis.ecoursemanagement.dto.request.ApiResponse;
 import com.thesis.ecoursemanagement.dto.request.UserCreateRequest;
 import com.thesis.ecoursemanagement.dto.request.UserUpdateRequest;
 import com.thesis.ecoursemanagement.dto.response.UserResponse;
@@ -11,7 +10,6 @@ import com.thesis.ecoursemanagement.model.User;
 import com.thesis.ecoursemanagement.repository.RoleRepository;
 import com.thesis.ecoursemanagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

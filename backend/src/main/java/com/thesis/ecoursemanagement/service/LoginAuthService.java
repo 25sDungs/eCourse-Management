@@ -1,6 +1,6 @@
 package com.thesis.ecoursemanagement.service;
 
-import com.thesis.ecoursemanagement.dto.request.ApiResponse;
+import com.thesis.ecoursemanagement.dto.response.ApiResponse;
 import com.thesis.ecoursemanagement.dto.request.LoginRequest;
 import com.thesis.ecoursemanagement.dto.response.LoginResponse;
 import com.thesis.ecoursemanagement.model.User;

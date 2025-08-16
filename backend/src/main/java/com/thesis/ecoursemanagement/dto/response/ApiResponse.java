@@ -1,4 +1,4 @@
-package com.thesis.ecoursemanagement.dto.request;
+package com.thesis.ecoursemanagement.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

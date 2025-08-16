@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class ClassCreateRequest {
+public class ClassRequest {
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -19,6 +19,7 @@ public class ClassCreateRequest {
     @NotNull(message = "End date is required")
     private LocalDate endDate;
 
-    @NotBlank(message = "Teacher name is required")
+    @NotBlank(message = "Teacher is required")
     private String teacherName;
+
 }

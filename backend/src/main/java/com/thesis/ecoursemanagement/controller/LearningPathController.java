@@ -1,6 +1,7 @@
 package com.thesis.ecoursemanagement.controller;
 
-import com.thesis.ecoursemanagement.dto.LearningPathDTO;
+import com.thesis.ecoursemanagement.dto.request.LearningPathRequest;
+import com.thesis.ecoursemanagement.dto.response.LearningPathResponse;
 import com.thesis.ecoursemanagement.service.LearningPathService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,20 +17,20 @@ public class LearningPathController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    public List<LearningPathDTO> getMyLearningPaths() {
+    public List<LearningPathResponse> getMyLearningPaths() {
         return learningPathService.getMyLearningPaths();
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    public LearningPathDTO create(@RequestBody LearningPathDTO dto) {
-        return learningPathService.createLearningPath(dto);
+    public LearningPathResponse create(@RequestBody LearningPathRequest request) {
+        return learningPathService.createLearningPath(request);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    public LearningPathDTO update(@PathVariable Long id, @RequestBody LearningPathDTO dto) {
-        return learningPathService.updateLearningPath(id, dto);
+    public LearningPathResponse update(@PathVariable Long id, @RequestBody LearningPathRequest request) {
+        return learningPathService.updateLearningPath(id, request);
     }
 
     @DeleteMapping("/{id}")

@@ -1,15 +1,15 @@
-package com.thesis.ecoursemanagement.dto;
+package com.thesis.ecoursemanagement.dto.response;
 
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class LearningPathDTO {
+public class LearningPathResponse {
     private Long id;
     private String title;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Long userId;
+    private String studentUsername;
 }

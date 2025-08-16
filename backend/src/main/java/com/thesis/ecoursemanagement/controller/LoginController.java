@@ -1,10 +1,9 @@
 package com.thesis.ecoursemanagement.controller;
 
-import com.thesis.ecoursemanagement.dto.request.ApiResponse;
+import com.thesis.ecoursemanagement.dto.response.ApiResponse;
 import com.thesis.ecoursemanagement.dto.request.LoginRequest;
 import com.thesis.ecoursemanagement.dto.response.LoginResponse;
 import com.thesis.ecoursemanagement.service.LoginAuthService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

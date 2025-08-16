@@ -1,6 +1,7 @@
 package com.thesis.ecoursemanagement.service;
 
-import com.thesis.ecoursemanagement.dto.LearningPathDTO;
+import com.thesis.ecoursemanagement.dto.request.LearningPathRequest;
+import com.thesis.ecoursemanagement.dto.response.LearningPathResponse;
 import com.thesis.ecoursemanagement.mapper.LearningPathMapper;
 import com.thesis.ecoursemanagement.model.LearningPath;
 import com.thesis.ecoursemanagement.model.User;
@@ -12,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,20 +28,22 @@ public class LearningPathService {
                 .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
-    public List<LearningPathDTO> getMyLearningPaths() {
+    public List<LearningPathResponse> getMyLearningPaths() {
         User student = getCurrentStudent();
         return learningPathRepository.findByStudent(student)
-                .stream().map(mapper::toDTO).toList();
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
-    public LearningPathDTO createLearningPath(LearningPathDTO dto) {
+    public LearningPathResponse createLearningPath(LearningPathRequest request) {
         User student = getCurrentStudent();
-        LearningPath lp = mapper.toEntity(dto);
+        LearningPath lp = mapper.toEntity(request);
         lp.setStudent(student);
-        return mapper.toDTO(learningPathRepository.save(lp));
+        return mapper.toResponse(learningPathRepository.save(lp));
     }
 
-    public LearningPathDTO updateLearningPath(Long id, LearningPathDTO dto) {
+    public LearningPathResponse updateLearningPath(Long id, LearningPathRequest request) {
         User student = getCurrentStudent();
         LearningPath lp = learningPathRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Learning Path not found"));
@@ -50,12 +52,12 @@ public class LearningPathService {
             throw new RuntimeException("Access denied");
         }
 
-        lp.setTitle(dto.getTitle());
-        lp.setDescription(dto.getDescription());
-        lp.setStartDate(dto.getStartDate());
-        lp.setEndDate(dto.getEndDate());
+        lp.setTitle(request.getTitle());
+        lp.setDescription(request.getDescription());
+        lp.setStartDate(request.getStartDate());
+        lp.setEndDate(request.getEndDate());
 
-        return mapper.toDTO(learningPathRepository.save(lp));
+        return mapper.toResponse(learningPathRepository.save(lp));
     }
 
     public void deleteLearningPath(Long id) {

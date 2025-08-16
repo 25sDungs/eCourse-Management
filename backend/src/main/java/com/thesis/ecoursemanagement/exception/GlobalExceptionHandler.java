@@ -1,6 +1,6 @@
 package com.thesis.ecoursemanagement.exception;
 
-import com.thesis.ecoursemanagement.dto.request.ApiResponse;
+import com.thesis.ecoursemanagement.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
