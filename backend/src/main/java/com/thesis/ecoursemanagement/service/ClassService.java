@@ -3,17 +3,14 @@ package com.thesis.ecoursemanagement.service;
 import com.thesis.ecoursemanagement.dto.request.ClassRequest;
 import com.thesis.ecoursemanagement.dto.response.ClassResponse;
 import com.thesis.ecoursemanagement.mapper.ClassMapper;
-import com.thesis.ecoursemanagement.model.ClassEntity;
-import com.thesis.ecoursemanagement.model.Course;
+import com.thesis.ecoursemanagement.model.*;
 import com.thesis.ecoursemanagement.repository.ClassRepository;
 import com.thesis.ecoursemanagement.repository.CourseRepository;
+import com.thesis.ecoursemanagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +19,7 @@ public class ClassService {
     private final ClassRepository classRepository;
     private final ClassMapper classMapper;
     private final CourseRepository courseRepository;
-
-    //    public Page<ClassEntity> getAllClasses(int page, int size) {
-//        return classRepository.findAll(PageRequest.of(page, size));
-//    }
+    private final UserRepository userRepository;
 
     public List<ClassResponse> getAllClassesByCourse(Long courseId) {
         Course course = courseRepository.findById(courseId)
@@ -40,25 +34,71 @@ public class ClassService {
         return classMapper.toClassResponse(classEntity);
     }
 
-    public List<ClassResponse> getClassesByCourse(Long courseId) {
-        return classMapper.toResponseList(classRepository.findByCourseId(courseId));
-    }
-
     public ClassResponse createClass(Long courseId, ClassRequest request) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
-        ClassEntity entity = classMapper.toClassEntity(request);
-        entity.setCourse(course);
+        ClassEntity classEntity = classMapper.toClassEntity(request);
+        classEntity.setCourse(course);
+        if (request.getTeacherId() != null) {
+            User teacher = userRepository.findById(request.getTeacherId())
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            boolean isTeacher = teacher.getRoles().stream()
+                    .anyMatch(r -> r.getName() == RoleName.ROLE_TEACHER);
+            if (!isTeacher) {
+                throw new RuntimeException("User is not a teacher");
+            }
+            classEntity.setTeacher(teacher);
+        } else {
+            classEntity.setTeacher(null);
+        }
 
-        return classMapper.toClassResponse(classRepository.save(entity));
+        return classMapper.toClassResponse(classRepository.save(classEntity));
     }
 
     public ClassResponse updateClass(Long courseId, Long classId, ClassRequest request) {
-        ClassEntity entity = classRepository.findByIdAndCourseId(classId, courseId)
+        ClassEntity classEntity = classRepository.findByIdAndCourseId(classId, courseId)
                 .orElseThrow(() -> new RuntimeException("Class not found in this course"));
 
-        classMapper.updateEntityFromRequest(request, entity);
+        classMapper.updateEntityFromRequest(request, classEntity);
+        if (request.getTeacherId() != null) {
+            User teacher = userRepository.findById(request.getTeacherId())
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            boolean isTeacher = teacher.getRoles().stream()
+                    .anyMatch(r -> r.getName() == RoleName.ROLE_TEACHER);
+            if (!isTeacher) {
+                throw new RuntimeException("User is not a teacher");
+            }
+            classEntity.setTeacher(teacher);
+        } else {
+            classEntity.setTeacher(null);
+        }
+        return classMapper.toClassResponse(classRepository.save(classEntity));
+    }
+
+    public ClassResponse updateClassTeacher(Long classId, String teacherIdStr) {
+        ClassEntity entity = classRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
+
+        if (teacherIdStr == null) {
+            return classMapper.toClassResponse(entity);
+        }
+
+        if (teacherIdStr.isBlank()) {
+            entity.setTeacher(null);
+        } else {
+            User teacher = userRepository.findById(teacherIdStr)
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+            boolean isTeacher = teacher.getRoles().stream()
+                    .map(Role::getName)
+                    .anyMatch(roleName -> roleName == RoleName.ROLE_TEACHER);
+
+            if (!isTeacher) {
+                throw new RuntimeException("User is not a teacher");
+            }
+            entity.setTeacher(teacher);
+        }
 
         return classMapper.toClassResponse(classRepository.save(entity));
     }

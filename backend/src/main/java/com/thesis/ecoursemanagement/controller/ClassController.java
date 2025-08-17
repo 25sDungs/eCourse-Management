@@ -3,16 +3,15 @@ package com.thesis.ecoursemanagement.controller;
 import com.thesis.ecoursemanagement.dto.response.ApiResponse;
 import com.thesis.ecoursemanagement.dto.request.ClassRequest;
 import com.thesis.ecoursemanagement.dto.response.ClassResponse;
-import com.thesis.ecoursemanagement.model.ClassEntity;
 import com.thesis.ecoursemanagement.service.ClassService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/courses/{courseId}/classes")
@@ -74,4 +73,19 @@ public class ClassController {
                 .build());
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<ClassResponse>> updateClassTeacher(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> requestBody) {
+
+        String teacherIdStr = requestBody.get("teacherId");
+
+        ClassResponse updated = classService.updateClassTeacher(id, teacherIdStr);
+
+        return ResponseEntity.ok(ApiResponse.<ClassResponse>builder()
+                .codeResponse(HttpStatus.OK.value())
+                .message("Class teacher updated successfully")
+                .result(updated)
+                .build());
+    }
 }

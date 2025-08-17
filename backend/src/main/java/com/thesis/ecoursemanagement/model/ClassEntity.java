@@ -21,7 +21,10 @@ public class ClassEntity {
 
     private LocalDate startDate;
     private LocalDate endDate;
-    private String teacherName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id", nullable = true)
+    private User teacher;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)

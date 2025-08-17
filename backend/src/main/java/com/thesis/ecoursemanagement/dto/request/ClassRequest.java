@@ -19,7 +19,6 @@ public class ClassRequest {
     @NotNull(message = "End date is required")
     private LocalDate endDate;
 
-    @NotBlank(message = "Teacher is required")
-    private String teacherName;
+    private String teacherId;
 
 }

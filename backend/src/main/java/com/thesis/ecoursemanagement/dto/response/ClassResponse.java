@@ -17,5 +17,5 @@ public class ClassResponse {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String teacherName;
+    private String teacherId;
 }
