@@ -3,10 +3,6 @@ package com.thesis.ecoursemanagement.mapper;
 import com.thesis.ecoursemanagement.dto.request.ClassRequest;
 import com.thesis.ecoursemanagement.dto.response.ClassResponse;
 import com.thesis.ecoursemanagement.model.ClassEntity;
-import com.thesis.ecoursemanagement.model.Role;
-import com.thesis.ecoursemanagement.model.RoleName;
-import com.thesis.ecoursemanagement.model.User;
-import com.thesis.ecoursemanagement.repository.UserRepository;
 import org.mapstruct.*;
 
 import java.util.List;

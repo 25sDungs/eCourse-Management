@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,6 +46,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/courses/*/classes", "/api/courses/*/classes/**").permitAll()
                         .requestMatchers("/api/courses", "/api/courses/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/enrollments", "/api/enrollments/me").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT")
+                        .requestMatchers(HttpMethod.PATCH, "/api/enrollments/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/certifications/me", "/api/certifications/*/download").hasAuthority("ROLE_STUDENT")
+                        .requestMatchers("/api/certifications/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

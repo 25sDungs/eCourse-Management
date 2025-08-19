@@ -17,13 +17,14 @@ public class ClassEntity {
     private Long id;
 
     private String name;
+    private Long cost;
     private String description;
 
     private LocalDate startDate;
     private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id", nullable = true)
+    @JoinColumn(name = "teacher_id")
     private User teacher;
 
     @ManyToOne(fetch = FetchType.LAZY)

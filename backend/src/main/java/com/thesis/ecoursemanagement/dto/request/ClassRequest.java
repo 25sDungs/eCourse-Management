@@ -11,6 +11,7 @@ public class ClassRequest {
     @NotBlank(message = "Name is required")
     private String name;
 
+    private Long cost;
     private String description;
 
     @NotNull(message = "Start date is required")

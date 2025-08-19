@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class ClassResponse {
     private Long id;
     private String name;
+    private Long cost;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
