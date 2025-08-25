@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class CourseRequest {
     @NotBlank(message = "Course Name can not be empty!")
     private String courseName;
+    private String description;
 }

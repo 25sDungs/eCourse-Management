@@ -9,9 +9,10 @@ import java.time.LocalDate;
 @Data
 public class EnrollmentResponse {
     private Long id;
-    private String  studentId;
+    private String studentId;
     private Long classId;
     private String className;
+    private Long courseId;
     private LocalDate enrollTime;
     private String status;
 }

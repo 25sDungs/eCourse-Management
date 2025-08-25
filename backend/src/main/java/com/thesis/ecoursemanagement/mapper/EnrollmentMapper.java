@@ -12,6 +12,7 @@ public interface EnrollmentMapper {
     @Mapping(source = "student.id", target = "studentId")
     @Mapping(source = "classEntity.id", target = "classId")
     @Mapping(source = "classEntity.name", target = "className")
+    @Mapping(source = "classEntity.course.id", target = "courseId")
     EnrollmentResponse toResponse(Enrollment entity);
 
     List<EnrollmentResponse> toResponseList(List<Enrollment> entities);

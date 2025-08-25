@@ -34,7 +34,8 @@ public class CourseService {
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
-        course.setCourseName(request.getCourseName());
+        if (request.getCourseName() != null) course.setCourseName(request.getCourseName());
+        if (request.getDescription() != null) course.setDescription(request.getDescription());
         return courseMapper.toResponse(courseRepository.save(course));
     }
 

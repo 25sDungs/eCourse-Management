@@ -12,5 +12,6 @@ import java.util.List;
 public class CourseResponse {
     private Long id;
     private String courseName;
+    private String description;
     private List<ClassResponse> classes;
 }

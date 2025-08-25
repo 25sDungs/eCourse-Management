@@ -8,6 +8,7 @@ import com.thesis.ecoursemanagement.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest request) {
+    @PostMapping(consumes = "multipart/form-data")
+    ApiResponse<UserResponse> createUser(@ModelAttribute @Valid UserCreateRequest request) {
 
         return ApiResponse.<UserResponse>builder()
                 .codeResponse(201)
@@ -29,8 +30,11 @@ public class UserController {
     }
 
     @GetMapping
-    List<UserResponse> getUsers() {
-        return userService.getUsers();
+    public Page<UserResponse> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return userService.getUsers(page, size);
     }
 
     @GetMapping("/{userId}")
@@ -38,9 +42,17 @@ public class UserController {
         return userService.findUserId(userId);
     }
 
-    @PutMapping("/{userId}")
-    UserResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
+    @PatchMapping(value = "/{userId}", consumes = "multipart/form-data")
+    UserResponse updateUser(@PathVariable("userId") String userId, @ModelAttribute UserUpdateRequest request) {
         return userService.updateUser(userId, request);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<UserResponse> getCurrentUser() {
+        return ApiResponse.<UserResponse>builder()
+                .codeResponse(200)
+                .result(userService.getCurrentUser())
+                .build();
     }
 
     @DeleteMapping("/{userId}")

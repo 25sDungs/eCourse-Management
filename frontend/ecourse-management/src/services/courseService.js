@@ -21,15 +21,3 @@ export const getCourseById = async (id) => {
     }
 };
 
-export const payment = async (classId, cost) => {
-    try {
-        const res = await api.post("/payments/create", {
-            courseClassId: classId,
-            amount: cost,
-        });
-        window.location.href = res.data.paymentUrl;
-    } catch (err) {
-        console.error("Thanh toán thất bại:", err);
-        alert("Không thể khởi tạo thanh toán");
-    }
-};

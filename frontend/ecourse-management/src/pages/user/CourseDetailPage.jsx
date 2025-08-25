@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCourseById } from "../../services/courseService";
-import Card from "../../components/Card";
-import { payment } from "../../services/courseService";
+import { payment } from "../../services/paymentService";
 
 
 function CourseDetailPage() {
@@ -13,7 +12,8 @@ function CourseDetailPage() {
 
     const handlePayment = async (classId, cost) => {
         try {
-            await payment(classId, cost);
+            const returnUrl = `${window.location.origin}/payment-callback?classId=${classId}`;
+            await payment(classId, cost, returnUrl);
         } catch (err) {
             console.error("Thanh toán lỗi:", err);
         }
@@ -33,7 +33,6 @@ function CourseDetailPage() {
     };
     useEffect(() => {
         fetchCourseById();
-        console.info(courseClasses);
     }, [id]);
 
     return (

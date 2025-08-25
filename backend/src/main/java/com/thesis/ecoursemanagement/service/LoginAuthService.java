@@ -29,11 +29,13 @@ public class LoginAuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Invalid username or password");
         }
+        String role = user.getRoles().toString();
 
         String token = jwtService.generateToken(user);
         LoginResponse loginResponse = LoginResponse.builder()
                 .token(token)
                 .username(user.getUsername())
+                .role(role.substring(role.indexOf("name=") + 5, role.indexOf("]")-1))
                 .build();
         return ApiResponse.<LoginResponse>builder()
                 .codeResponse(200)

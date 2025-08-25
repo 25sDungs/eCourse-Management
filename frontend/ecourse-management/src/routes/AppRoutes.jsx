@@ -4,6 +4,8 @@ import HomePage from "../pages/user/HomePage.jsx";
 import LoginPage from "../pages/user/LoginPage.jsx";
 import CoursesPage from "../pages/user/CoursePage.jsx";
 import CourseDetailPage from "../pages/user/CourseDetailPage.jsx";
+import PaymentCallbackPage from "../pages/user/PaymentCallbackPage.jsx";
+import MyCoursesPage from "../pages/user/MyCoursesPage.jsx";
 
 import AdminRoute from "./AdminRoute.jsx";
 import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
@@ -24,6 +26,8 @@ function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
+        <Route path="/payment-callback" element={<PaymentCallbackPage />} />
+        <Route path="/my-courses" element={<MyCoursesPage />} />
       </Route>
 
 
