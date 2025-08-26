@@ -20,5 +20,6 @@ public class UserResponse {
     private String lastName;
     private LocalDate dob;
     private String avatarUrl;
+    private String email;
 //    private Role role;
 }

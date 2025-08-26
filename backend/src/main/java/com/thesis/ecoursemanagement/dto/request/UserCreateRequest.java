@@ -26,4 +26,6 @@ public class UserCreateRequest {
     private String lastName;
     private LocalDate dob;
     private MultipartFile avatar;
+    @NotBlank(message = "Email can not be empty!")
+    private String email;
 }

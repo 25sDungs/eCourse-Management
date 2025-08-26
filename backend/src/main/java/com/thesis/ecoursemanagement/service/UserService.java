@@ -61,6 +61,7 @@ public class UserService {
         if (request.getLastName() != null) user.setLastName(request.getLastName());
         if (request.getDob() != null) user.setDob(request.getDob());
         if (request.getPassword() != null) user.setPassword(passwordEncoder.encode(request.getPassword()));
+        if (request.getEmail() != null) user.setEmail(request.getEmail());
         MultipartFile avatarFile = request.getAvatar();
         if (avatarFile != null && !avatarFile.isEmpty()) {
             try {

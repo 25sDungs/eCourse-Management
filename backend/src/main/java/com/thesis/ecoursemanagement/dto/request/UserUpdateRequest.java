@@ -18,4 +18,5 @@ public class UserUpdateRequest {
     private String lastName;
     private LocalDate dob;
     private MultipartFile avatar;
+    private String email;
 }
