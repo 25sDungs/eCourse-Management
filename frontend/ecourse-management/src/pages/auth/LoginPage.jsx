@@ -17,6 +17,7 @@ const Login = () => {
         setLoading(true);
         try {
             const data = await login(username, password);
+            localStorage.setItem("loginTime", Date.now());
             localStorage.setItem("token", data.result.token);
             localStorage.setItem("username", data.result.username);
             localStorage.setItem("role", data.result.role);
