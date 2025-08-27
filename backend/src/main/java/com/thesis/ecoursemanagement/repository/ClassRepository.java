@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface ClassRepository extends JpaRepository<ClassEntity, Long> {
     List<ClassEntity> findByCourseId(Long courseId);
 
+    List<ClassEntity> findByTeacherId(String teacherId);
+
     Optional<ClassEntity> findByIdAndCourseId(Long id, Long courseId);
 }

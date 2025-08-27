@@ -106,4 +106,18 @@ public class ClassService {
     public void deleteClass(Long courseId, Long classId) {
         classRepository.findByIdAndCourseId(classId, courseId).ifPresent(classRepository::delete);
     }
+
+    public List<ClassResponse> getClassesByTeacher(String teacherId) {
+        User teacher = userRepository.findById(teacherId)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+        boolean isTeacher = teacher.getRoles().stream()
+                .anyMatch(r -> r.getName() == RoleName.ROLE_TEACHER);
+        if (!isTeacher) {
+            throw new RuntimeException("User is not a teacher");
+        }
+
+        List<ClassEntity> classes = classRepository.findByTeacherId(teacherId);
+        return classMapper.toResponseList(classes);
+    }
 }

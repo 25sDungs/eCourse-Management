@@ -88,4 +88,9 @@ public class ClassController {
                 .result(updated)
                 .build());
     }
+
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<ClassResponse>> getClassesByTeacher(@PathVariable String teacherId) {
+        return ResponseEntity.ok(classService.getClassesByTeacher(teacherId));
+    }
 }
