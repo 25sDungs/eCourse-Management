@@ -13,7 +13,7 @@ function MainLayout() {
             localStorage.removeItem("loginTime");
             localStorage.removeItem("username");
             localStorage.removeItem("token");
-            navigate("/login");
+            navigate("/");
         }
     }, []);
 

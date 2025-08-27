@@ -21,3 +21,20 @@ export const register = async (formData) => {
         throw new Error(error.response?.data?.message || "Đăng ký thất bại");
     }
 };
+
+export const updateUserInfo = async (id, form, avatar) => {
+    const formData = new FormData();
+    if (form.firstName) formData.append("firstName", form.firstName);
+    if (form.lastName) formData.append("lastName", form.lastName);
+    if (form.dob) formData.append("dob", form.dob);
+    if (form.password) formData.append("password", form.password);
+    if (form.email) formData.append("email", form.email);
+    if (avatar) formData.append("avatar", avatar);
+
+    const res = await api.patch(`/users/${id}`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    return res.data;
+};

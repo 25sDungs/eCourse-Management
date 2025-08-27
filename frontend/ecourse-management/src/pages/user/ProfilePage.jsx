@@ -1,9 +1,60 @@
 import { useState, useEffect } from "react";
-import { currentUserInfo } from "../../services/userService";
+import { currentUserInfo, updateUserInfo } from "../../services/userService";
 
 
 function ProfilePage() {
     const [user, setUser] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [form, setForm] = useState({
+        firstName: "",
+        lastName: "",
+        dob: "",
+        email: "",
+        password: "",
+    });
+
+    const [avatarFile, setAvatarFile] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null);
+
+    const handleEditClick = () => {
+        if (user) {
+            setForm({
+                firstName: user.firstName || "",
+                lastName: user.lastName || "",
+                dob: user.dob || "",
+                email: user.email || "",
+            });
+            setAvatarPreview(user.avatarUrl || null);
+            setIsEditing(true);
+        }
+    };
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setAvatarFile(file);
+            setAvatarPreview(URL.createObjectURL(file));
+        }
+    };
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await updateUserInfo(user.id, form, avatarFile);
+            setIsEditing(false);
+            setAvatarFile(null);
+            getUserInfo();
+        } catch (err) {
+            console.error("Update failed:", err);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
 
     const getUserInfo = async () => {
         try {
@@ -30,7 +81,7 @@ function ProfilePage() {
                 <div className="flex-shrink-0">
                     {user.avatarUrl ? (
                         <img
-                            src={user.avatarUrl}
+                            src={avatarPreview || user.avatarUrl || "/default-avatar.png"}
                             alt="Avatar"
                             className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
                         />
@@ -46,35 +97,143 @@ function ProfilePage() {
                             </svg>
                         </div>
                     )}
+                    {isEditing && (
+                        <label className="flex justify-center bottom-0 right-0 bg-blue-600 text-white px-2 py-1 text-xs rounded cursor-pointer hover:bg-blue-700">
+                            Đổi ảnh
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleAvatarChange}
+                            />
+                        </label>
+                    )}
                 </div>
 
                 <div className="flex-1 w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <p className="text-sm text-gray-500">Tên đăng nhập</p>
-                            <p className="font-medium">{user.username}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500">Họ và tên</p>
-                            <p className="font-medium">
-                                {user.lastName} {user.firstName}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500">Ngày sinh</p>
-                            <p className="font-medium">{user.dob}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500">Email</p>
-                            <p className="font-medium">{user.email}</p>
-                        </div>
-                    </div>
+                    {!isEditing ? (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-sm text-gray-500">Họ</p>
+                                    <p className="font-medium">{user.lastName} </p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-500">Tên</p>
+                                    <p className="font-medium">
+                                        {user.firstName}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-500">Ngày sinh</p>
+                                    <p className="font-medium">{user.dob}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-500">Email</p>
+                                    <p className="font-medium">{user.email}</p>
+                                </div>
+                            </div>
 
-                    <div className="mt-6">
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                            Chỉnh sửa thông tin
-                        </button>
-                    </div>
+                            <div className="mt-6">
+                                <button
+                                    onClick={handleEditClick}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                >
+                                    Chỉnh sửa thông tin
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm text-gray-500">Họ</label>
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        value={form.lastName}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg px-3 py-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-500">Tên</label>
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        value={form.firstName}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg px-3 py-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-500">Ngày sinh</label>
+                                    <input
+                                        type="date"
+                                        name="dob"
+                                        value={form.dob}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg px-3 py-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-500">Email</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={form.email}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg px-3 py-2"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between gap-3 mt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsEditing(false)
+                                        setAvatarFile(null);
+                                        setAvatarPreview(null);
+                                    }}
+                                    disabled={loading}
+                                    className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                                >
+                                    Hủy
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                >
+                                    {loading ? (
+                                        <svg
+                                            className="animate-spin h-5 w-5 text-white"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                            ></path>
+                                        </svg>
+                                    ) : (
+                                        "Lưu thay đổi"
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    )}
                 </div>
             </div>
         </div>

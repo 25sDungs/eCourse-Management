@@ -24,7 +24,6 @@ function Header() {
             try {
                 const data = await currentUserInfo();
                 setAvtUrl(data.result.avatarUrl || "");
-                console.log("avt URL: ",data.result.avatarUrl);
             } catch (err) {
                 setAvtUrl("");
              }
