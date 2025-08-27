@@ -1,4 +1,5 @@
 package com.thesis.ecoursemanagement.service;
+
 import com.thesis.ecoursemanagement.dto.request.ClassContentRequest;
 import com.thesis.ecoursemanagement.dto.response.ClassContentResponse;
 import com.thesis.ecoursemanagement.mapper.ClassContentMapper;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ClassContentService {
@@ -61,8 +63,8 @@ public class ClassContentService {
             throw new RuntimeException("Content does not belong to this class");
         }
 
-        if(request.getTitle() != null) entity.setTitle(request.getTitle());
-        if(request.getContent() != null)entity.setContent(request.getContent());
+        if (request.getTitle() != null) entity.setTitle(request.getTitle());
+        if (request.getContent() != null) entity.setContent(request.getContent());
 
         return classContentMapper.toResponse(classContentRepository.save(entity));
     }

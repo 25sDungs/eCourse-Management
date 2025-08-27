@@ -41,10 +41,11 @@ public class ClassContentController {
     }
 
     @DeleteMapping("/{contentId}")
-    public void deleteContent(@PathVariable Long courseId,
+    public String deleteContent(@PathVariable Long courseId,
                               @PathVariable Long classId,
                               @PathVariable Long contentId) {
         classContentService.deleteContent(courseId, classId, contentId);
+        return "Content deleted!";
     }
 
 }
