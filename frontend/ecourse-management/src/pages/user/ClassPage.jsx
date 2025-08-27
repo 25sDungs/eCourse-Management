@@ -127,15 +127,18 @@ function ClassPage() {
                     </button>
                     {activeTopic === "content" && (
                         <div className="px-6 pb-4 space-y-4">
-                            {classContent.map((c) => (
+                            {classContent.length > 0 ? (classContent.map((c) => (
                                 <div
                                     key={c.id}
                                     className="border-l-4 border-blue-500 pl-3 text-gray-700"
                                 >
                                     <h3 className="font-medium">{c.title}</h3>
                                     <p className="text-sm text-gray-600">{c.content}</p>
-                                </div>
-                            ))}
+                                </div>)))
+                                :
+                                (
+                                    <p className="text-gray-500">Lớp hiện tại chưa có nội dung nào.</p>
+                                )}
                         </div>
                     )}
                 </div>

@@ -20,8 +20,17 @@ const Login = () => {
             localStorage.setItem("loginTime", Date.now());
             localStorage.setItem("token", data.result.token);
             localStorage.setItem("username", data.result.username);
-            localStorage.setItem("role", data.result.role);
-            navigate("/");
+            const role = data.result.role;
+            localStorage.setItem("role", role);
+            if (role === "ROLE_ADMIN") {
+                navigate("/admin");
+            }
+            else if (role === "ROLE_TEACHER") {
+                navigate("/teacher");
+            }
+            else {
+                navigate("/");
+            }
         } catch (error) {
             setErrorMsg(error.message);
         } finally {

@@ -38,3 +38,17 @@ export const updateUserInfo = async (id, form, avatar) => {
     });
     return res.data;
 };
+
+export const deleteUser = async (id) =>  {
+    try {
+        const response = await api.delete(`/users/${id}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || "Xóa user thất bại");
+    }
+};
+
+export const getUsers = async (page = 0, size = 10) => {
+    const res = await api.get("/users", { params: { page, size } });
+    return res.data;
+};

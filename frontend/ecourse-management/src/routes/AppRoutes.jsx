@@ -9,15 +9,23 @@ import PaymentCallbackPage from "../pages/user/PaymentCallbackPage.jsx";
 import MyCoursesPage from "../pages/user/MyCoursesPage.jsx";
 import ProfilePage from "../pages/user/ProfilePage.jsx";
 import ClassPage from "../pages/user/ClassPage.jsx";
-import AdminRoute from "./AdminRoute.jsx";
+
 import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
 import AdminUser from "../pages/admin/AdminUsers.jsx";
+import AdminRoute from "./AdminRoute.jsx";
 
+import TeacherRoute from "./TeacherRoute.jsx";
+import TeacherDashboard from "../pages/teacher/TeacherDashboard.jsx";
+import TeacherClassDetail from "../pages/teacher/TeacherClassDetail.jsx";
+import TeacherCoursesPage from "../pages/teacher/TeacherCoursesPage.jsx";
+import AdminCoursesPage from "../pages/admin/AdminCourse.jsx";
+import AdminLayout from "../layouts/AdminLayout.jsx";
 
 function AppRoutes() {
   return (
 
     <Routes>
+
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
 
@@ -31,18 +39,42 @@ function AppRoutes() {
         <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
+      {/* Teacher Routes */}
+      <Route element={<MainLayout />}>
+        <Route path="/teacher"
+          element={
+            <TeacherRoute roles={["ROLE_TEACHER"]}>
+              <TeacherDashboard />
+            </TeacherRoute>
+          } />
+        <Route path="/teacher-classes/:courseId"
+          element={
+            <TeacherRoute>
+              <TeacherClassDetail />
+            </TeacherRoute>
+          } />
+        <Route path="/teacher-courses"
+          element={
+            <TeacherRoute>
+              <TeacherCoursesPage />
+            </TeacherRoute>
+          } />
+      </Route>
 
-      {/* Admin routes */}
-      <Route path="/admin"
+      {/* Admin Routes */}
+      <Route
+        path="/admin"
         element={
           <AdminRoute>
-            <AdminDashboard />
-          </AdminRoute>} />
-      <Route path="/admin/users"
-        element={
-          <AdminRoute>
-            <AdminUser />
-          </AdminRoute>} />
+            <AdminLayout />
+          </AdminRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<AdminUser />} />
+        <Route path="courses" element={<AdminCoursesPage />} />
+      </Route>
+
     </Routes>
   );
 }

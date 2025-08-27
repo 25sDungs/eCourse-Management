@@ -15,18 +15,23 @@ const Home = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-5">
-      <div className="flex justify-between items-center p-2 border-b border-gray-200">
-        <h1 className="text-2xl font-bold">!?!!</h1>
-      </div>
-      <main className="text-center mt-5">
-        <h2 className="text-3xl text-gray-800 font-semibold">
-          Chào mừng {username}!
-        </h2>
-        <p className="text-lg text-gray-600 mt-2">
-          Đây là trang chính của ứng dụng.
+    <div className="font-sans">
+
+      <section className="h-[80vh] flex flex-col justify-center items-center bg-gradient-to-r from-green-200 to-green-500 text-white text-center px-6">
+        <h2 className="text-4xl font-bold mb-4">Nền tảng học trực tuyến hiện đại</h2>
+        <p className="max-w-2xl mb-6">
+          Khám phá hàng trăm khóa học chất lượng, học tập dễ dàng mọi lúc, mọi nơi.
         </p>
-      </main>
+      </section>
+
+      <section className="md:grid-cols-2 gap-10 p-10">
+        <div className="flex-col justify-center">
+          <h3 className="text-2xl font-semibold mb-4 text-center">Giới thiệu về chúng tôi</h3>
+          <p className="text-gray-600 flex-col justify-center text-center">
+            Chúng tôi cung cấp nền tảng học trực tuyến hiện đại, mang đến kiến thức chất lượng từ các giảng viên uy tín.
+          </p>
+        </div>
+      </section>
     </div>
   );
 };

@@ -30,3 +30,13 @@ export const getClassById = async (courseId, classId) => {
         throw error;
     }
 };
+
+export const getTeacherClass = async (courseId, teacherId) => {
+    try {
+        const response = await api.get(`/courses/${courseId}/classes/teacher/${teacherId}`);
+        return response.data;
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu lớp học:", error);
+        throw error;
+    }
+};

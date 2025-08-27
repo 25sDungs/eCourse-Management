@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getUsers } from "../../services/adminService.js";
+import { getUsers, deleteUser } from "../../services/userService.js";
 import AdminHeader from "../../components/AdminHeader.jsx";
-import Sidebar from "../../components/Sidebar.jsx";
+
+
 const UsersPage = () => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
@@ -25,6 +26,18 @@ const UsersPage = () => {
         fetchUsers();
     }, []);
 
+    const handleDelete = async (userId) => {
+        if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
+            try {
+                await deleteUser(userId);
+                setUsers(users.filter((u) => u.id !== userId));
+                alert("Đã xóa user!");
+            } catch (error) {
+                alert("Xóa user thất bại!");
+            }
+        }
+    };
+
     const filteredUsers = users.filter(
         (user) =>
             user.username.toLowerCase().includes(search.toLowerCase()) ||
@@ -38,7 +51,6 @@ const UsersPage = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            <Sidebar isOpen={sidebarOpen} />
             <div className="bg-white flex-1 flex flex-col">
                 <AdminHeader onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
                 <div className="p-6 flex justify-between items-center mb-4">
@@ -74,10 +86,8 @@ const UsersPage = () => {
                                         <td className="px-6 py-3">{user.username}</td>
                                         <td className="px-6 py-3">{user.dob}</td>
                                         <td className="px-6 py-3 text-center">
-                                            <button className="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600 mr-2">
-                                                Sửa
-                                            </button>
-                                            <button className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600">
+                                            <button className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                                                onClick={() => handleDelete(user.id)}>
                                                 Xóa
                                             </button>
                                         </td>
