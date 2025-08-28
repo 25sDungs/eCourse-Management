@@ -15,7 +15,6 @@ function Header() {
 
     const handleLogout = () => {
         logout();
-        alert('Đăng xuất thành công!');
         navigate('/login');
     };
 

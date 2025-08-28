@@ -39,7 +39,22 @@ export const updateUserInfo = async (id, form, avatar) => {
     return res.data;
 };
 
-export const deleteUser = async (id) =>  {
+export const changePassword = async (id, newPassword) => {
+    try {
+        const res = await api.patch(`/users/${id}`, {
+            password: newPassword
+        }, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+
+        });
+        return res.data;
+    }
+    catch (error) { }
+};
+
+export const deleteUser = async (id) => {
     try {
         const response = await api.delete(`/users/${id}`);
         return response.data;

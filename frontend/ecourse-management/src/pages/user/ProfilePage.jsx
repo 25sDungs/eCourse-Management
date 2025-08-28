@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { currentUserInfo, updateUserInfo } from "../../services/userService";
+import { changePassword, currentUserInfo, updateUserInfo } from "../../services/userService";
 
 
 function ProfilePage() {
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [passwordForm, setPasswordForm] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
+
     const [form, setForm] = useState({
         firstName: "",
         lastName: "",
@@ -29,6 +36,7 @@ function ProfilePage() {
             setIsEditing(true);
         }
     };
+
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -36,8 +44,44 @@ function ProfilePage() {
             setAvatarPreview(URL.createObjectURL(file));
         }
     };
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handlePasswordChange = (e) => {
+        setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
+    };
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            alert("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+            setLoading(false);
+            return;
+        }
+        else if (passwordForm.newPassword.length < 6) {
+            alert("Mật khẩu mới phải có ít nhất 6 ký tự!");
+            setLoading(false);
+            return;
+        }
+        try {
+            await changePassword(user.id, passwordForm.newPassword);
+            setIsChangingPassword(false);
+            setPasswordForm({
+                currentPassword: "",
+                newPassword: "",
+                confirmPassword: "",
+            });
+            alert("Đổi mật khẩu thành công!");
+        } catch (err) {
+            console.error("Change password failed:", err);
+            alert("Đổi mật khẩu thất bại");
+        }
+        finally {
+            setLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -111,7 +155,7 @@ function ProfilePage() {
                 </div>
 
                 <div className="flex-1 w-full">
-                    {!isEditing ? (
+                    {!isEditing && !isChangingPassword ? (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -134,16 +178,23 @@ function ProfilePage() {
                                 </div>
                             </div>
 
-                            <div className="mt-6">
+                            <div className="mt-6 flex-1 gap-3 flex justify-evenly">
                                 <button
                                     onClick={handleEditClick}
                                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                                 >
                                     Chỉnh sửa thông tin
                                 </button>
+                                <button
+                                    onClick={() => setIsChangingPassword(true)}
+                                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+                                >
+                                    Đổi mật khẩu
+                                </button>
                             </div>
                         </>
-                    ) : (
+                    ) : null}
+                    {isEditing && (
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -230,6 +281,69 @@ function ProfilePage() {
                                     ) : (
                                         "Lưu thay đổi"
                                     )}
+                                </button>
+                            </div>
+                        </form>
+                    )}
+                    {isChangingPassword && (
+                        <form onSubmit={handleChangePassword} className="space-y-4 mt-4">
+                            <div>
+                                <label className="block text-sm text-gray-500">
+                                    Mật khẩu hiện tại
+                                </label>
+                                <input
+                                    type="password"
+                                    name="currentPassword"
+                                    value={passwordForm.currentPassword}
+                                    onChange={handlePasswordChange}
+                                    className="w-full border rounded-lg px-3 py-2"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-500">
+                                    Mật khẩu mới
+                                </label>
+                                <input
+                                    type="password"
+                                    name="newPassword"
+                                    value={passwordForm.newPassword}
+                                    onChange={handlePasswordChange}
+                                    className="w-full border rounded-lg px-3 py-2"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-500">
+                                    Xác nhận mật khẩu mới
+                                </label>
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    value={passwordForm.confirmPassword}
+                                    onChange={handlePasswordChange}
+                                    className="w-full border rounded-lg px-3 py-2"
+                                />
+                            </div>
+
+                            <div className="flex justify-between gap-3 mt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsChangingPassword(false);
+                                        setPasswordForm({
+                                            currentPassword: "",
+                                            newPassword: "",
+                                            confirmPassword: "",
+                                        });
+                                    }}
+                                    className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                                >
+                                    Hủy
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                >
+                                    Đổi mật khẩu
                                 </button>
                             </div>
                         </form>

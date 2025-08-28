@@ -18,7 +18,7 @@ import TeacherRoute from "./TeacherRoute.jsx";
 import TeacherDashboard from "../pages/teacher/TeacherDashboard.jsx";
 import TeacherClassDetail from "../pages/teacher/TeacherClassDetail.jsx";
 import TeacherCoursesPage from "../pages/teacher/TeacherCoursesPage.jsx";
-import AdminCoursesPage from "../pages/admin/AdminCourse.jsx";
+import AdminCoursesPage from "../pages/admin/AdminCoursesPage.jsx";
 import AdminLayout from "../layouts/AdminLayout.jsx";
 
 function AppRoutes() {

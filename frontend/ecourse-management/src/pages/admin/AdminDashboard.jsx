@@ -11,6 +11,16 @@ const AdminDashboard = () => {
     const [totalUsers, setTotalUsers] = useState([]);
     const [courses, setCourses] = useState([]);
 
+    function sumClasses(courses) {
+        let total = 0;
+        courses.forEach(course => {
+            if (course.classes) {
+                total += course.classes.length;
+            }
+        });
+        return total;
+    }
+
     const fetchUsers = async () => {
         try {
             const data = await getUsers(0, 10);
@@ -41,6 +51,7 @@ const AdminDashboard = () => {
                     <div className="flex gap-6 flex-wrap">
                         <Card title="Users" value={totalUsers} />
                         <Card title="Courses" value={courses.length} />
+                        <Card title="Classes" value={sumClasses(courses)} />
                     </div>
                     {/* Chart component */}
                 </main>

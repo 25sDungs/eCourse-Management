@@ -1,18 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../../styles/index.css";
-import { logout } from '../../services/authService';
 
 
 const Home = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem("username") || "";
-
-  const handleLogout = () => {
-    logout();
-    alert('Đăng xuất thành công!');
-    navigate('/login');
-  };
 
   return (
     <div className="font-sans">
