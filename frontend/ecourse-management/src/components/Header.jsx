@@ -6,6 +6,7 @@ import { currentUserInfo } from "../services/userService";
 function Header() {
 
     const username = localStorage.getItem("username") || "";
+    const userrole = localStorage.getItem("role") || "";
     const token = localStorage.getItem("token") || "";
 
     const [menuOpen, setMenuOpen] = useState(false);
@@ -25,7 +26,7 @@ function Header() {
                 setAvtUrl(data.result.avatarUrl || "");
             } catch (err) {
                 setAvtUrl("");
-             }
+            }
         }
     }
 
@@ -41,16 +42,17 @@ function Header() {
     }, []);
 
     return (
-        <header className="bg-blue-600 text-white shadow-md">
+        <header className="bg-gradient-to-l bg-yellow-200 text-black shadow-md">
             <div className="mx-auto px-4 py-4 flex justify-between items-center">
 
                 <div className="text-2xl font-bold">
                     <Link to="/">eCourse</Link>
                 </div>
                 <nav className="space-x-9" >
-                    <Link to="/" className="hover:text-blue-200">Trang Chủ</Link>
-                    <Link to="/courses" className="hover:text-blue-200">Các Khóa Học</Link>
-                    <Link to="/my-courses" className="hover:text-blue-200">Khóa Học Của Tôi</Link>
+                    <Link to="/" className="hover:text-blue-200"><span className="font-bold">TRANG CHỦ</span></Link>
+                    <Link to="/introduction" className="hover:text-blue-200"><span className="font-bold">GIỚI THIỆU</span></Link>
+                    <Link to="/courses" className="hover:text-blue-200"><span className="font-bold">CÁC KHÓA HỌC</span></Link>
+                    <Link to="/my-courses" className="hover:text-blue-200"><span className="font-bold">KHÓA HỌC CỦA TÔI</span></Link>
                 </nav>
                 <div
                     className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-blue-100 cursor-pointer flex items-center justify-center bg-gray-200 text-gray-600"
@@ -71,7 +73,7 @@ function Header() {
                 </div>
                 {menuOpen && (
                     <div className="absolute top-10 right-1 mt-2 bg-white text-black shadow-lg rounded-md z-50">
-                        {username ? (
+                        {userrole == "ROLE_STUDENT" ? (
                             <>
                                 <Link
                                     to="/profile"
@@ -80,6 +82,13 @@ function Header() {
                                 >
                                     Thông tin cá nhân
                                 </Link>
+                                <Link
+                                    to="/my-learning-paths"
+                                    className="block px-4 py-2 hover:bg-gray-100"
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    Lộ trình học của tôi
+                                </Link>
                                 <button
                                     className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
                                     onClick={handleLogout}
@@ -87,14 +96,40 @@ function Header() {
                                     Đăng xuất
                                 </button>
                             </>
-                        ) : (
-                            <button
-                                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
-                                onClick={() => navigate("/login")}
-                            >
-                                Đăng Nhập
-                            </button>
-                        )}
+                        ) : userrole === "ROLE_TEACHER" ? (
+                            <>
+                                <Link
+                                    to="/profile"
+                                    className="block px-4 py-2 hover:bg-gray-100"
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    Thông tin tài khoản
+                                </Link>
+                                <Link
+                                    to="/teacher"
+                                    className="block px-4 py-2 hover:bg-gray-100"
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    Quản lý lớp học
+                                </Link>
+                                <button
+                                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                                    onClick={handleLogout}
+                                >
+                                    Đăng xuất
+                                </button>
+                            </>
+                        )
+                            :
+                            (
+                                <button
+                                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                                    onClick={() => navigate("/login")}
+                                >
+                                    Đăng Nhập
+                                </button>
+                            )
+                        }
                     </div>
                 )}
             </div>

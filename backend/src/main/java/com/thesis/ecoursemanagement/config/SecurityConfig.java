@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT")
+                        .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
                         .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/learning-paths", "/api/learning-paths/**").hasAuthority("ROLE_STUDENT")
                         .requestMatchers(HttpMethod.GET, "/api/courses/*/classes/*/contents", "/api/courses/*/classes/*/contents/**",

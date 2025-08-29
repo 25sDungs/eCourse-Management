@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { changePassword, currentUserInfo, updateUserInfo } from "../../services/userService";
-
+import { getMyCertificate, downloadCertificate } from "../../services/certificationService";
 
 function ProfilePage() {
+    const userrole = localStorage.getItem("role") || "";
     const [user, setUser] = useState(null);
+    const [certifications, setCertifications] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -100,6 +102,14 @@ function ProfilePage() {
         }
     };
 
+    const handleDownloadCert = async (id, tilte) => {
+        try {
+            await downloadCertificate(id, tilte);
+        } catch (err) {
+            console.error("Download certificate failed:", err);
+        }
+    }
+
     const getUserInfo = async () => {
         try {
             const data = await currentUserInfo();
@@ -109,8 +119,19 @@ function ProfilePage() {
             console.error("Failed to fetch user info:", error);
         }
     };
+    const fetchCertifications = async () => {
+        try {
+            const data = await getMyCertificate();
+            setCertifications(data || []);
+        } catch (err) {
+            console.error("Lỗi tải chứng chỉ:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
+        if (userrole === "ROLE_STUDENT") { fetchCertifications(); }
         getUserInfo();
     }, []);
 
@@ -350,6 +371,49 @@ function ProfilePage() {
                     )}
                 </div>
             </div>
+            {userrole === "ROLE_STUDENT" && <div className="max-w-5xl mx-auto px-4 py-8">
+                <h1 className="text-2xl font-bold mb-6">Các chứng chỉ</h1>
+
+                {certifications.length === 0 ? (
+                    <div className="bg-gray-50 border rounded-xl p-6 text-center text-gray-500">
+                        Bạn chưa có chứng chỉ nào.
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {certifications.map((cert) => (
+                            <div
+                                key={cert.id}
+                                className="bg-white shadow-md rounded-xl p-6 flex flex-col gap-4 border hover:shadow-lg transition"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div>
+                                        <h2 className="text-lg font-semibold">{cert.content}</h2>
+                                    </div>
+                                </div>
+
+                                <div className="text-sm text-gray-600">
+                                    <p>
+                                        <span className="font-medium">Ngày cấp:</span>{" "}
+                                        {new Date(cert.issueDate).toLocaleDateString("vi-VN")}
+                                    </p>
+                                </div>
+
+                                <div className="flex justify-between items-center">
+                                    {cert.url && (
+                                        <button
+                                            onClick={() => handleDownloadCert(cert.id, cert.content)}
+                                            className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                                        >
+                                            Tải chứng chỉ
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>}
+
         </div>
     );
 }

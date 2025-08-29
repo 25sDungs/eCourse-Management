@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaFacebook, FaLinkedin, FaInstagram } from "react-icons/fa";
-
+import { FaFacebook, FaLinkedin, FaInstagram, FaTwitch } from "react-icons/fa";
 function Footer() {
 
     return (
@@ -11,6 +10,7 @@ function Footer() {
                     <h3 className="text-lg font-semibold mb-4">Liên Hệ</h3>
                     <p>Địa chỉ: 97 Võ Văn Tần, Phường Xuân Hòa, TP.HCM</p>
                     <p>Email: 2251052024dung@ou.edu.vn</p>
+                    <p>Hotline: 0123456789</p>
                 </div>
 
                 <div>
@@ -33,6 +33,9 @@ function Footer() {
                         </a>
                         <a href="#" className="hover:text-blue-300">
                             <FaInstagram />
+                        </a>
+                        <a href="#" className="hover:text-blue-300">
+                            <FaTwitch />
                         </a>
                     </div>
                 </div>
