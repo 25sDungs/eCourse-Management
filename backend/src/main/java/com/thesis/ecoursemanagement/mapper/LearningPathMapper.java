@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface LearningPathMapper {
     @Mapping(target = "student", ignore = true)
-        // set trong service
     LearningPath toEntity(LearningPathRequest request);
 
     @Mapping(source = "student.username", target = "studentUsername")

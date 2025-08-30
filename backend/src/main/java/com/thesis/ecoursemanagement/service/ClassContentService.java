@@ -48,13 +48,7 @@ public class ClassContentService {
         return classContentMapper.toResponse(classContentRepository.save(entity));
     }
 
-    public ClassContentResponse updateContent(Long courseId, Long classId, Long contentId, ClassContentRequest request) {
-        ClassEntity classEntity = classRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Class not found"));
-
-        if (!classEntity.getCourse().getId().equals(courseId)) {
-            throw new RuntimeException("Class does not belong to this course");
-        }
+    public ClassContentResponse updateContent(Long classId, Long contentId, ClassContentRequest request) {
 
         ClassContent entity = classContentRepository.findById(contentId)
                 .orElseThrow(() -> new RuntimeException("Content not found"));
@@ -69,8 +63,8 @@ public class ClassContentService {
         return classContentMapper.toResponse(classContentRepository.save(entity));
     }
 
-    public void deleteContent(Long courseId, Long classId, Long contentId) {
-        classContentRepository.findByIdAndClassEntityIdAndClassEntityCourseId(contentId, classId, courseId)
+    public void deleteContent(Long classId, Long contentId) {
+        classContentRepository.findByIdAndClassEntityId(contentId, classId)
                 .ifPresent(classContentRepository::delete);
     }
 }

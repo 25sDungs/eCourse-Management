@@ -19,21 +19,21 @@ public class AssignmentService {
     private final ClassRepository classRepository;
     private final AssignmentMapper assignmentMapper;
 
-    public List<AssignmentResponse> getAllAssignments(Long courseId, Long classId) {
-        return assignmentRepository.findByClassEntityIdAndClassEntityCourseId(classId, courseId)
+    public List<AssignmentResponse> getAllAssignments(Long classId) {
+        return assignmentRepository.findByClassEntityId(classId)
                 .stream()
                 .map(assignmentMapper::toResponse)
                 .toList();
     }
 
-    public AssignmentResponse getAssignmentById(Long courseId, Long classId, Long assignmentId) {
-        Assignment assignment = assignmentRepository.findByIdAndClassEntityIdAndClassEntityCourseId(assignmentId, classId, courseId)
+    public AssignmentResponse getAssignmentById(Long classId, Long assignmentId) {
+        Assignment assignment = assignmentRepository.findByIdAndClassEntityId(assignmentId, classId)
                 .orElseThrow(() -> new RuntimeException("Assignment not found"));
         return assignmentMapper.toResponse(assignment);
     }
 
-    public AssignmentResponse createAssignment(Long courseId, Long classId, AssignmentRequest request) {
-        ClassEntity classEntity = classRepository.findByIdAndCourseId(classId, courseId)
+    public AssignmentResponse createAssignment(Long classId, AssignmentRequest request) {
+        ClassEntity classEntity = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
 
         Assignment assignment = assignmentMapper.toEntity(request);
@@ -41,8 +41,8 @@ public class AssignmentService {
         return assignmentMapper.toResponse(assignmentRepository.save(assignment));
     }
 
-    public AssignmentResponse updateAssignment(Long courseId, Long classId, Long assignmentId, AssignmentRequest request) {
-        Assignment assignment = assignmentRepository.findByIdAndClassEntityIdAndClassEntityCourseId(assignmentId, classId, courseId)
+    public AssignmentResponse updateAssignment(Long classId, Long assignmentId, AssignmentRequest request) {
+        Assignment assignment = assignmentRepository.findByIdAndClassEntityId(assignmentId, classId)
                 .orElseThrow(() -> new RuntimeException("Assignment not found"));
 
         if(request.getTitle()!=null) assignment.setTitle(request.getTitle());
@@ -53,8 +53,8 @@ public class AssignmentService {
         return assignmentMapper.toResponse(assignmentRepository.save(assignment));
     }
 
-    public void deleteAssignment(Long courseId, Long classId, Long assignmentId) {
-        assignmentRepository.findByIdAndClassEntityIdAndClassEntityCourseId(assignmentId, classId, courseId)
+    public void deleteAssignment(Long classId, Long assignmentId) {
+        assignmentRepository.findByIdAndClassEntityId(assignmentId, classId)
                 .ifPresent(assignmentRepository::delete);
     }
 }

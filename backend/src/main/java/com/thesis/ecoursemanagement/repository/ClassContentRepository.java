@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ClassContentRepository extends JpaRepository<ClassContent, Long> {
     List<ClassContent> findByClassEntityId(Long classId);
-    Optional<ClassContent> findByIdAndClassEntityIdAndClassEntityCourseId(Long contentId, Long classId, Long courseId);
+    Optional<ClassContent> findByIdAndClassEntityId(Long contentId, Long classId);
 
 }

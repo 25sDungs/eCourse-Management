@@ -19,42 +19,37 @@ public class AssignmentController {
 
     @GetMapping
     public List<AssignmentResponse> getAllAssignments(
-            @PathVariable Long courseId,
             @PathVariable Long classId) {
-        return assignmentService.getAllAssignments(courseId, classId);
+        return assignmentService.getAllAssignments(classId);
     }
 
     @GetMapping("/{assignmentId}")
     public AssignmentResponse getAssignmentById(
-            @PathVariable Long courseId,
             @PathVariable Long classId,
             @PathVariable Long assignmentId) {
-        return assignmentService.getAssignmentById(courseId, classId, assignmentId);
+        return assignmentService.getAssignmentById(classId, assignmentId);
     }
 
     @PostMapping
     public AssignmentResponse createAssignment(
-            @PathVariable Long courseId,
             @PathVariable Long classId,
             @RequestBody AssignmentRequest request) {
-        return assignmentService.createAssignment(courseId, classId, request);
+        return assignmentService.createAssignment(classId, request);
     }
 
     @PutMapping("/{assignmentId}")
     public AssignmentResponse updateAssignment(
-            @PathVariable Long courseId,
             @PathVariable Long classId,
             @PathVariable Long assignmentId,
             @RequestBody AssignmentRequest request) {
-        return assignmentService.updateAssignment(courseId, classId, assignmentId, request);
+        return assignmentService.updateAssignment(classId, assignmentId, request);
     }
 
     @DeleteMapping("/{assignmentId}")
     public String deleteAssignment(
-            @PathVariable Long courseId,
             @PathVariable Long classId,
             @PathVariable Long assignmentId) {
-        assignmentService.deleteAssignment(courseId, classId, assignmentId);
+        assignmentService.deleteAssignment(classId, assignmentId);
         return "Assignment deleted!";
     }
 }

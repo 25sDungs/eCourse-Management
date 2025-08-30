@@ -43,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
                         .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/learning-paths", "/api/learning-paths/**").hasAuthority("ROLE_STUDENT")
+                        .requestMatchers("/api/courses/*/classes/*/assignments/*/submissions", "/api/courses/*/classes/*/assignments/*/submissions/**")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")
                         .requestMatchers(HttpMethod.GET, "/api/courses/*/classes/*/contents", "/api/courses/*/classes/*/contents/**",
                                 "/api/courses/*/classes/*/assignments", "/api/courses/*/classes/*/assignments/**")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER", "ROLE_STUDENT")
@@ -50,7 +52,6 @@ public class SecurityConfig {
                                 "/api/courses/*/classes/*/assignments", "/api/courses/*/classes/*/assignments/**")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
                         .requestMatchers(HttpMethod.GET, "/api/courses/*/classes/teacher/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
-//                        .requestMatchers(HttpMethod.GET, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_STUDENT")
                         .requestMatchers(HttpMethod.POST, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_ADMIN")

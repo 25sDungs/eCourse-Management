@@ -1,7 +1,9 @@
 package com.thesis.ecoursemanagement.service;
 
 import com.thesis.ecoursemanagement.dto.request.CourseRequest;
+import com.thesis.ecoursemanagement.dto.response.ClassResponse;
 import com.thesis.ecoursemanagement.dto.response.CourseResponse;
+import com.thesis.ecoursemanagement.mapper.ClassMapper;
 import com.thesis.ecoursemanagement.mapper.CourseMapper;
 import com.thesis.ecoursemanagement.model.Course;
 import com.thesis.ecoursemanagement.repository.CourseRepository;
@@ -15,6 +17,7 @@ import java.util.List;
 public class CourseService {
     private final CourseMapper courseMapper;
     private final CourseRepository courseRepository;
+    private final ClassMapper classMapper;
 
     public List<CourseResponse> getAllCourses() {
         return courseMapper.toResponseList(courseRepository.findAll());
@@ -23,7 +26,15 @@ public class CourseService {
     public CourseResponse getCourseById(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
-        return courseMapper.toResponse(course);
+
+        List<ClassResponse> classResponses = classMapper.toResponseList(course.getClasses());
+
+        return CourseResponse.builder()
+                .id(course.getId())
+                .courseName(course.getCourseName())
+                .description(course.getDescription())
+                .classes(classResponses)
+                .build();
     }
 
     public CourseResponse createCourse(CourseRequest request) {

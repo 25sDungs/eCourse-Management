@@ -33,18 +33,18 @@ public class ClassContentController {
     }
 
     @PatchMapping("/{contentId}")
-    public ClassContentResponse updateContent(@PathVariable Long courseId,
-                                              @PathVariable Long classId,
-                                              @PathVariable Long contentId,
-                                              @RequestBody ClassContentRequest request) {
-        return classContentService.updateContent(courseId, classId, contentId, request);
+    public ClassContentResponse updateContent(
+            @PathVariable Long classId,
+            @PathVariable Long contentId,
+            @RequestBody ClassContentRequest request) {
+        return classContentService.updateContent(classId, contentId, request);
     }
 
     @DeleteMapping("/{contentId}")
-    public String deleteContent(@PathVariable Long courseId,
-                              @PathVariable Long classId,
-                              @PathVariable Long contentId) {
-        classContentService.deleteContent(courseId, classId, contentId);
+    public String deleteContent(
+            @PathVariable Long classId,
+            @PathVariable Long contentId) {
+        classContentService.deleteContent(classId, contentId);
         return "Content deleted!";
     }
 

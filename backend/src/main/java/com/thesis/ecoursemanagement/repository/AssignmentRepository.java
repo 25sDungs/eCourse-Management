@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
-    List<Assignment> findByClassEntityIdAndClassEntityCourseId(Long classId, Long courseId);
+    List<Assignment> findByClassEntityId(Long classId);
 
-    Optional<Assignment> findByIdAndClassEntityIdAndClassEntityCourseId(Long id, Long classId, Long courseId);
+    Optional<Assignment> findByIdAndClassEntityId(Long id, Long classId);
 }
