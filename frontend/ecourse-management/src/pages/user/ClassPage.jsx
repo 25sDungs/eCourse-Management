@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getClassAssignments, getClassContents, getClassById } from "../../services/classService";
+import { getClassById } from "../../services/classService";
+import { getClassAssignments, getClassContents } from "../../services/classContentService"
 import { getMyEnrollments } from "../../services/enrollClassService";
 import { useParams, Link } from "react-router-dom";
 import { FaBook } from "react-icons/fa";

@@ -5,7 +5,6 @@ import { currentUserInfo } from "../services/userService";
 
 function Header() {
 
-    const username = localStorage.getItem("username") || "";
     const userrole = localStorage.getItem("role") || "";
     const token = localStorage.getItem("token") || "";
 

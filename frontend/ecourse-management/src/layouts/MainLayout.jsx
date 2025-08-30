@@ -10,7 +10,7 @@ function MainLayout() {
         const loginTime = localStorage.getItem("loginTime");
         const maxSession = 60 * 60 * 1000;
         if (loginTime && Date.now() - loginTime > maxSession) {
-            localStorage.removeItem("loginTime");
+            localStorage.removeItem("role");
             localStorage.removeItem("username");
             localStorage.removeItem("token");
             navigate("/");

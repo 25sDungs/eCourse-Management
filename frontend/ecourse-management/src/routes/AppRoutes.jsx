@@ -17,9 +17,7 @@ import AdminUser from "../pages/admin/AdminUsers.jsx";
 import AdminRoute from "./AdminRoute.jsx";
 
 import TeacherRoute from "./TeacherRoute.jsx";
-import TeacherDashboard from "../pages/teacher/TeacherDashboard.jsx";
-import TeacherClassDetail from "../pages/teacher/TeacherClassDetail.jsx";
-import TeacherCoursesPage from "../pages/teacher/TeacherCoursesPage.jsx";
+import ClassManagePage from "../pages/teacher/ClassManagePage.jsx";
 import AdminCoursesPage from "../pages/admin/AdminCoursesPage.jsx";
 import AdminLayout from "../layouts/AdminLayout.jsx";
 
@@ -48,19 +46,7 @@ function AppRoutes() {
         <Route path="/teacher"
           element={
             <TeacherRoute roles={["ROLE_TEACHER"]}>
-              <TeacherDashboard />
-            </TeacherRoute>
-          } />
-        <Route path="/teacher-classes/:courseId"
-          element={
-            <TeacherRoute>
-              <TeacherClassDetail />
-            </TeacherRoute>
-          } />
-        <Route path="/teacher-courses"
-          element={
-            <TeacherRoute>
-              <TeacherCoursesPage />
+              <ClassManagePage />
             </TeacherRoute>
           } />
       </Route>
