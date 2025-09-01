@@ -20,6 +20,7 @@ import TeacherRoute from "./TeacherRoute.jsx";
 import ClassManagePage from "../pages/teacher/ClassManagePage.jsx";
 import AdminCoursesPage from "../pages/admin/AdminCoursesPage.jsx";
 import AdminLayout from "../layouts/AdminLayout.jsx";
+import SubmissionsPage from "../pages/teacher/SubmissionPage.jsx";
 
 function AppRoutes() {
   return (
@@ -50,6 +51,16 @@ function AppRoutes() {
             </TeacherRoute>
           } />
       </Route>
+
+      <Route element={<MainLayout />}>
+        <Route path="/classes/:className/assignments/:assignmentId/submissions"
+          element={
+            <TeacherRoute roles={["ROLE_TEACHER"]}>
+              <SubmissionsPage />
+            </TeacherRoute>
+          } />
+      </Route>
+
 
       {/* Admin Routes */}
       <Route

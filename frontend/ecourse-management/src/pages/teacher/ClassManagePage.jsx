@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
-import { FaChalkboardTeacher, FaTasks, FaPlus, FaCalendarAlt, FaBook } from "react-icons/fa";
+import { FaChalkboardTeacher, FaTasks, FaPlus, FaCalendarAlt, FaBook, FaEdit, FaTrash } from "react-icons/fa";
 import { getTeacherClass } from "../../services/classService";
 import { currentUserInfo } from "../../services/userService";
-import { getClassAssignments, getClassContents, createAssignments, createClassContents } from "../../services/classContentService"
+import {
+  getClassAssignments, getClassContents, createAssignments, createClassContents,
+  updateAssignments, delAssignments, updateClassContents, delClassContents
+} from "../../services/classContentService"
+import { Link } from "react-router-dom";
 
 const TeacherDashboard = () => {
   const token = localStorage.getItem("token");
@@ -14,6 +18,9 @@ const TeacherDashboard = () => {
 
   const [openContentModal, setOpenContentModal] = useState(false);
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
+
+  const [editingContent, setEditingContent] = useState(null);
+  const [editingAssignment, setEditingAssignment] = useState(null);
 
   const [classes, setClasses] = useState([]);
   const [classContents, setClassContents] = useState([]);
@@ -31,7 +38,7 @@ const TeacherDashboard = () => {
     setLoading(true);
     try {
       await createClassContents(0, classId, newContent);
-      setClassContents([newContent, ...classContents]);
+      fetchClassContents(classId);
     }
     catch (err) {
       console.error("Lỗi khi gọi api tạo nội dung", err)
@@ -46,8 +53,12 @@ const TeacherDashboard = () => {
   const handleAddAssignment = async (classId) => {
     setLoading(true);
     try {
+      if (!newAssignment.title || !newAssignment.description || !newAssignment.startDate || !newAssignment.dueDate) {
+        alert("Vui lòng nhập đầy đủ nội dung");
+        return;
+      }
       await createAssignments(0, classId, newAssignment);
-      setAssignments([newAssignment, ...assignments]);
+      fetchAssignments(classId);
     }
     catch (err) {
       console.error("Lỗi khi gọi api tạo bài tập", err)
@@ -59,6 +70,67 @@ const TeacherDashboard = () => {
     }
   };
 
+  const handleEditAssignmentClick = async (classId, editAssignment) => {
+    setLoading(true);
+    try {
+      const title = editAssignment.title;
+      const description = editAssignment.description;
+      const startDate = editAssignment.startDate;
+      const dueDate = editAssignment.dueDate;
+      await updateAssignments(0, classId, editAssignment.id, { title, description, startDate, dueDate });
+      setAssignments(assignments.map((a) => (a.id === editAssignment.id ? { title, description, startDate, dueDate } : a)));
+    }
+    catch (err) {
+      console.error("Lỗi khi gọi api chỉnh sửa bài tập", err)
+    }
+    finally {
+      setEditingAssignment(null);
+      setLoading(false);
+    }
+  };
+
+  const handleEditClassContentClick = async (classId, editContent) => {
+    setLoading(true);
+    try {
+      const title = editContent.title;
+      const content = editContent.content;
+      await updateClassContents(0, classId, editContent.id, { title, content });
+      setClassContents(classContents.map((c) => (c.id === editContent.id ? { title, content } : c)));
+    }
+    catch (err) {
+      console.error("Lỗi khi gọi api cập nhật nội dung bài học", err)
+    }
+    finally {
+      setEditingContent(null);
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteClassContent = async (classId, contentId) => {
+    if (!window.confirm("Bạn có chắc chắn xóa nội dung này?")) { return; }
+    setLoading(true);
+    try {
+      await delClassContents(0, classId, contentId);
+      setClassContents(classContents.filter((c) => c.id !== contentId));
+    } catch (err) {
+      console.error("Lỗi khi xóa nội dung lớp học: ", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAssignment = async (classId, assignmentId) => {
+    if (!window.confirm("Bạn có chắc chắn xóa bài tập này?")) { return; }
+    setLoading(true);
+    try {
+      await delAssignments(0, classId, assignmentId);
+      setAssignments(assignments.filter((a) => a.id !== assignmentId));
+    } catch (err) {
+      console.error("Lỗi khi xóa bài tập", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchClassContents = async (id) => {
     setLoading(true);
@@ -73,6 +145,7 @@ const TeacherDashboard = () => {
       setLoading(false);
     }
   }
+
   const fetchAssignments = async (id) => {
     setLoading(true);
     try {
@@ -252,10 +325,35 @@ const TeacherDashboard = () => {
 
                 {/* ClassContents */}
                 <ul className="space-y-2">
-                  {classContents.length > 0 ? classContents.map((content) => (
-                    <li key={content.id} className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md">
-                      <h3 className="font-semibold">{content.title}</h3>
-                      <p className="text-sm text-gray-500">{content.content}</p>
+                  {classContents.length > 0 ? classContents.map((c) => (
+                    <li
+                      key={c.id}
+                      className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
+                    >
+                      <div>
+                        <h3 className="font-semibold">{c.title}</h3>
+                        <p className="text-sm text-gray-500">{c.content}</p>
+                      </div>
+
+                      <div className="flex gap-2">
+                        {/* Nút sửa */}
+                        <button
+                          onClick={() => setEditingContent(c)}
+                          className="p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                          title="Chỉnh sửa"
+                        >
+                          <FaEdit size={18} />
+                        </button>
+
+                        {/* Nút xóa */}
+                        <button
+                          onClick={() => handleDeleteClassContent(selectedClass, c.id)}
+                          className="p-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 transition"
+                          title="Xóa"
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
                     </li>
                   ))
                     :
@@ -285,11 +383,38 @@ const TeacherDashboard = () => {
                 <ul className="space-y-2">
 
                   {assignments.length > 0 ? assignments.map((a) => (
-                    <li key={a.id} className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md">
-                      <h3 className="font-semibold">{a.title}</h3>
-                      <p className="text-sm text-gray-500">
-                        {a.dueDate}
-                      </p>
+                    <li
+                      key={a.id}
+                      className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
+                    >
+                      <div>
+                        <h3 className="font-semibold">{a.title}</h3>
+                        <p className="text-sm text-gray-500">{a.description}</p>
+                        <p className="text-sm text-gray-500">Deadline: {a.dueDate}</p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <Link
+                          to={`/classes/${selectedClassData.name}/assignments/${a.id}/submissions`}
+                          className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                        >
+                          Xem bài nộp
+                        </Link>
+                        <button
+                          onClick={() => setEditingAssignment(a)}
+                          className="p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                          title="Chỉnh sửa"
+                        >
+                          <FaEdit size={18} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAssignment(selectedClass, a.id)}
+                          className="p-2 rounded-full bg-red-50 text-red-600 hover:bg-red-100 transition"
+                          title="Xóa"
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
                     </li>
                   ))
                     :
@@ -406,10 +531,91 @@ const TeacherDashboard = () => {
                 </div>
               </div>
             )}
+
+            {/* Modal chỉnh sửa content */}
+            {editingContent && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
+                  <h2 className="text-lg font-bold mb-4">Chỉnh sửa nội dung</h2>
+                  <input
+                    type="text"
+                    value={editingContent.title}
+                    onChange={(e) => setEditingContent({ ...editingContent, title: e.target.value })}
+                    className="w-full border p-2 mb-3 rounded"
+                  />
+                  <textarea
+                    value={editingContent.content}
+                    onChange={(e) => setEditingContent({ ...editingContent, content: e.target.value })}
+                    className="w-full border p-2 mb-3 rounded"
+                  />
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setEditingContent(null)}
+                      className="px-4 py-2 bg-gray-200 rounded-lg"
+                    >
+                      Hủy
+                    </button>
+                    <button
+                      onClick={() => handleEditClassContentClick(selectedClassData.id, editingContent)}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Lưu
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Modal chỉnh sửa assignment */}
+            {editingAssignment && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
+                  <h2 className="text-lg font-bold mb-4">Chỉnh sửa bài tập</h2>
+                  <input
+                    type="text"
+                    value={editingAssignment.title}
+                    onChange={(e) => setEditingAssignment({ ...editingAssignment, title: e.target.value })}
+                    className="w-full border p-2 mb-3 rounded"
+                  />
+                  <textarea
+                    value={editingAssignment.description}
+                    onChange={(e) => setEditingAssignment({ ...editingAssignment, description: e.target.value })}
+                    className="w-full border p-2 mb-3 rounded"
+                  />
+                  <input
+                    type="datetime-local"
+                    value={editingAssignment.startDate?.slice(0, 16)} // format lại cho input
+                    onChange={(e) => setEditingAssignment({ ...editingAssignment, startDate: e.target.value })}
+                    className="w-full border p-2 mb-3 rounded"
+                  />
+                  <input
+                    type="datetime-local"
+                    value={editingAssignment.dueDate?.slice(0, 16)}
+                    onChange={(e) => setEditingAssignment({ ...editingAssignment, dueDate: e.target.value })}
+                    className="w-full border p-2 mb-3 rounded"
+                  />
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setEditingAssignment(null)}
+                      className="px-4 py-2 bg-gray-200 rounded-lg"
+                    >
+                      Hủy
+                    </button>
+                    <button
+                      onClick={() => handleEditAssignmentClick(selectedClassData.id, editingAssignment)}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    >
+                      Lưu
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </main>
-    </div>
+        )
+        }
+      </main >
+    </div >
   );
 }
 
