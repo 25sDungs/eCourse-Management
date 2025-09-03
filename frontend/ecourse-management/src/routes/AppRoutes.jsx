@@ -15,6 +15,7 @@ import IntroductionPage from "../pages/user/IntroductionPage.jsx";
 import AdminDashboard from "../pages/admin/AdminDashboard.jsx";
 import AdminUser from "../pages/admin/AdminUsers.jsx";
 import AdminRoute from "./AdminRoute.jsx";
+import AdminEnrollmentPage from "../pages/admin/AdminEnrollmentPage.jsx"
 
 import TeacherRoute from "./TeacherRoute.jsx";
 import ClassManagePage from "../pages/teacher/ClassManagePage.jsx";
@@ -63,17 +64,14 @@ function AppRoutes() {
 
 
       {/* Admin Routes */}
-      <Route
-        path="/admin"
-        element={
-          <AdminRoute>
-            <AdminLayout />
-          </AdminRoute>
-        }
+      <Route path="/admin" element={<AdminRoute>
+        <AdminLayout />
+      </AdminRoute>}
       >
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<AdminUser />} />
         <Route path="courses" element={<AdminCoursesPage />} />
+        <Route path="enrollments" element={<AdminEnrollmentPage />} />
       </Route>
 
     </Routes>

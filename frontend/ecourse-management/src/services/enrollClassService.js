@@ -22,3 +22,24 @@ export const getMyEnrollments = async () => {
         throw err;
     }
 };
+
+export const getAllEnrollments = async () => {
+    try {
+        const res = await api.get("/enrollments");
+        return res.data;
+    } catch (err) {
+        console.error("Lỗi lấy danh sách tham gia lớp:", err);
+        throw err;
+    }
+};
+
+export const updateEnrollStatus = async (id, status) => {
+    try {
+        const res = await api.patch(`/enrollments/${id}`, { status });
+        return res.data;
+    } catch (err) {
+        console.error("Lỗi cập nhật trạng thái tham gia lớp:", err);
+        throw err;
+    }
+};
+

@@ -7,6 +7,7 @@ const Sidebar = ({ isOpen }) => {
     { name: "Dashboard", path: "/admin" },
     { name: "Users", path: "/admin/users" },
     { name: "Courses", path: "/admin/courses" },
+    { name: "Enrollments", path: "/admin/enrollments" },
   ];
 
   return (

@@ -24,3 +24,32 @@ export const updateSubmission = async (assignmentId, submissionId, { score, judg
         throw err;
     }
 }
+
+export const submitSubmission = async (assignmentId, formData) => {
+    try {
+        const response = await api.post(`/courses/0/classes/0/assignments/${assignmentId}/submissions`, formData);
+        return response.data;
+    } catch (err) {
+        console.log("submit error: " + err);
+        throw err;
+    }
+}
+
+export const getDownloadSubmission = async (assignmentId, submissionId) => {
+    try {
+        const response = api.get(`/api/courses/0/classes/0/assignments/${assignmentId}/submissions/${submissionId}/download`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response.data.message || "Download submission error!");
+    }
+}
+
+export const getMySubmission = async (assignmentId) => {
+    try {
+        const response = await api.get(`/courses/0/classes/0/assignments/${assignmentId}/submissions/me`);
+        return response.data;
+    } catch (err) {
+        console.log("submit error: " + err);
+        throw err;
+    }
+}

@@ -4,6 +4,7 @@ import { getClassAssignments, getClassContents } from "../../services/classConte
 import { getMyEnrollments } from "../../services/enrollClassService";
 import { useParams, Link } from "react-router-dom";
 import { FaBook } from "react-icons/fa";
+import { getMySubmission, submitSubmission } from "../../services/submissionService";
 
 function ClassPage() {
     const { courseId, classId } = useParams();
@@ -11,10 +12,56 @@ function ClassPage() {
     const [classInfo, setClassInfo] = useState({});
     const [classContent, setClassContent] = useState([]);
     const [assignments, setAssignments] = useState([]);
-    const [classFiles, setClassFiles] = useState([]);
-    const [exams, setExams] = useState([]);
+
+    const [openAssignment, setOpenAssignment] = useState(null);
+    const [submissionContent, setSubmissionContent] = useState("");
+    const [file, setFile] = useState(null);
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [assignmentStatus, setAssignmentStatus] = useState(null);
+
 
     const [enrollments, setEnrollments] = useState([]);
+
+
+    const handleSubmit = async (assignmentId) => {
+        if (!file) {
+            setMessage("Vui lòng chọn file trước khi nộp");
+            return;
+        }
+        setLoading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            await submitSubmission(assignmentId, formData);
+            alert("Nộp bài thành công");
+            handleCloseAssignment(null);
+        }
+        catch (err) {
+            setMessage("❌ Lỗi khi gọi api nộp bài: " + err.message);
+            console.error(err)
+
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+
+    const handleOpenAssignment = async (id) => {
+        setOpenAssignment(id);
+        try {
+            const data = await getMySubmission(id);
+            setAssignmentStatus(data || null);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
+
+    const handleCloseAssignment = async () => {
+        setOpenAssignment(null);
+        setAssignmentStatus(null);
+    }
 
     const getEnrollmentsData = async () => {
         try {
@@ -162,15 +209,98 @@ function ClassPage() {
                                         className="p-4 border rounded-lg hover:shadow transition"
                                     >
                                         <h3 className="font-medium text-gray-800">{a.title}</h3>
-                                        <p className="text-sm text-gray-600 mt-1">
-                                            {a.description}
-                                        </p>
+                                        <p className="text-sm text-gray-600 mt-1">{a.description}</p>
                                         <p className="text-xs text-gray-500 mt-2">
                                             Hạn nộp:{" "}
                                             {a.dueDate
                                                 ? new Date(a.dueDate).toLocaleDateString()
                                                 : "Chưa có"}
                                         </p>
+
+                                        <button
+                                            onClick={() => handleOpenAssignment(a.id)}
+                                            className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                        >
+                                            Nộp bài
+                                        </button>
+
+                                        {/* Form nộp bài hoặc trạng thái nộp */}
+                                        {openAssignment === a.id && (
+                                            <div className="mt-4 border-t pt-4 space-y-3 animate-fadeInDown">
+                                                {assignmentStatus === null ? (
+                                                    <>
+                                                        <input
+                                                            type="file"
+                                                            onChange={(e) => setFile(e.target.files[0])}
+                                                            className="block w-full text-sm text-gray-600"
+                                                        />
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={() => handleSubmit(a.id)}
+                                                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-transform duration-200 hover:scale-105"
+                                                            >
+                                                                Xác nhận nộp
+                                                            </button>
+                                                            <button
+                                                                onClick={handleCloseAssignment}
+                                                                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-transform duration-200 hover:scale-105"
+                                                            >
+                                                                Hủy
+                                                            </button>
+                                                        </div>
+                                                        {message && <p className="text-sm mt-2">{message}</p>}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg space-y-2">
+                                                            <p className="font-medium">
+                                                                ✅ Bạn đã nộp bài lúc:{" "}
+                                                                <span className="font-bold">
+                                                                    {new Date(
+                                                                        assignmentStatus.submitTime
+                                                                    ).toLocaleString("vi-VN")}
+                                                                </span>
+                                                            </p>
+
+                                                            {assignmentStatus.fileUrl && (
+                                                                <a
+                                                                    href={assignmentStatus.fileUrl}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="underline text-blue-600 hover:text-blue-800"
+                                                                >
+                                                                    📄 Xem lại bài nộp
+                                                                </a>
+                                                            )}
+
+                                                            {assignmentStatus.score !== null && (
+                                                                <p className="text-sm">
+                                                                    Điểm:{" "}
+                                                                    <span className="font-bold text-green-700">
+                                                                        {assignmentStatus.score}
+                                                                    </span>
+                                                                </p>
+                                                            )}
+
+                                                            {assignmentStatus.teacherComment && (
+                                                                <p className="text-sm italic text-gray-700">
+                                                                    Nhận xét: "{assignmentStatus.teacherComment}"
+                                                                </p>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={handleCloseAssignment}
+                                                                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-transform duration-200 hover:scale-105"
+                                                            >
+                                                                Đóng
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 ))
                             ) : (

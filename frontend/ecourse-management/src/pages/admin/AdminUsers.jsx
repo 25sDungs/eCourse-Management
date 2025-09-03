@@ -41,7 +41,8 @@ const UsersPage = () => {
     const filteredUsers = users.filter(
         (user) =>
             user.username.toLowerCase().includes(search.toLowerCase()) ||
-            (user.firstName + " " + user.lastName).toLowerCase().includes(search.toLowerCase())
+            (user.firstName + " " + user.lastName).toLowerCase().includes(search.toLowerCase()) ||
+            user.id.includes(search)
     );
 
     const handlePageChange = (newPage) => {

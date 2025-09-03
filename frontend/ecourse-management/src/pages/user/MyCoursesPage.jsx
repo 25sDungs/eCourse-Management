@@ -42,38 +42,80 @@ function MyCoursesPage() {
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-6">Khóa học của tôi</h1>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {enrollments.map((enrollment) => (
                     <div
                         key={enrollment.classId}
-                        className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition"
+                        className="bg-white shadow rounded-xl overflow-hidden hover:shadow-xl transition"
                     >
+                        {/* Banner */}
                         <div
-                            className={`w-full h-40 flex items-center justify-center text-white text-2xl font-bold bg-gradient-to-t ${randomGradient()}`}
-                        />
+                            className={`w-full h-32 flex items-center justify-center text-white text-lg font-semibold bg-gradient-to-r ${randomGradient()}`}
+                        >
+                        </div>
+
+                        {/* Nội dung */}
                         <div className="p-4">
-                            <h2 className="font-semibold text-lg mb-2">
+                            <h2 className="font-semibold text-lg text-gray-800">
                                 {enrollment.className}
                             </h2>
-                            <p className="text-sm text-gray-600 line-clamp-2">
-                                {enrollment.enrollTime}
+
+                            <p className="text-sm text-gray-500 mt-1">
+                                Ngày tham gia: {enrollment.enrollTime}
                             </p>
-                            <p className="text-sm text-gray-600 line-clamp-2">
+
+                            <p
+                                className={`inline-block mt-2 px-2 py-1 text-xs font-medium rounded-full 
+                  ${enrollment.status === "APPROVED"
+                                        ? "bg-green-100 text-green-700"
+                                        : enrollment.status === "PENDING"
+                                            ? "bg-yellow-100 text-yellow-700"
+                                            : "bg-red-100 text-red-700"
+                                    }`}
+                            >
                                 {enrollment.status}
                             </p>
-                            <Link
-                                to={`/courses/${enrollment.courseId}/classes/${enrollment.classId}`}
-                                className="mt-3 inline-block text-blue-600 hover:underline"
-                            >
-                                Vào lớp học →
-                            </Link>
+
+                            <div className="mt-4">
+                                {enrollment.status === "APPROVED" && (
+                                    <Link
+                                        to={`/courses/${enrollment.courseId}/classes/${enrollment.classId}`}
+                                        className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                                    >
+                                        Vào lớp học →
+                                    </Link>
+                                )}
+
+                                {enrollment.status === "COMPLETED" && (
+                                    <Link
+                                        to={`/courses/${enrollment.courseId}/classes/${enrollment.classId}`}
+                                        className="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                                    >
+                                        Xem lại lớp học
+                                    </Link>
+                                )}
+                                {enrollment.status === "PENDING" && (
+                                    <span className="inline-block bg-gray-200 text-gray-600 px-4 py-2 rounded-lg cursor-not-allowed">
+                                        Đang chờ duyệt
+                                    </span>
+                                )}
+
+                                {enrollment.status === "REJECTED" && (
+                                    <span className="inline-block bg-red-200 text-red-700 px-4 py-2 rounded-lg">
+                                        Không thể tham gia
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ))}
+
+                {enrollments.length === 0 && (
+                    <p className="text-gray-600">Bạn chưa tham gia lớp học nào.</p>
+                )}
             </div>
         </div>
     );
-
 }
 
 export default MyCoursesPage;
