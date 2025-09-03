@@ -1,8 +1,9 @@
 package com.thesis.ecoursemanagement.controller;
 
-import com.thesis.ecoursemanagement.dto.request.SubmissionRequest;
 import com.thesis.ecoursemanagement.dto.request.SubmitScoreRequest;
 import com.thesis.ecoursemanagement.dto.response.SubmissionResponse;
+import com.thesis.ecoursemanagement.model.Submission;
+import com.thesis.ecoursemanagement.repository.SubmissionRepository;
 import com.thesis.ecoursemanagement.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubmissionController {
     private final SubmissionService submissionService;
+    private final SubmissionRepository submissionRepository;
+
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
@@ -30,13 +33,14 @@ public class SubmissionController {
     @GetMapping("/{id}/download")
     @PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
-        byte[] fileData = submissionService.downloadFile(id);
-        String fileName = submissionService.getFileName(id);
+        Submission submission = submissionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Submission not found"));
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + submission.getFileName() + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(fileData);
+                .body(submission.getFileData());
     }
 
     @GetMapping

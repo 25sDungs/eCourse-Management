@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -90,11 +93,33 @@ public class EnrollmentService {
                         .url("/certificates/" + enrollment.getStudent().getId()
                                 + "_" + enrollment.getClassEntity().getId() + ".pdf")
                         .build();
-
                 certificationRepository.save(cert);
             }
         }
-
         return enrollmentMapper.toResponse(enrollmentRepository.save(enrollment));
+    }
+
+    public Long getRevenueByClassId(Long classId) {
+        return Optional.ofNullable(enrollmentRepository.calculateRevenueByClassId(classId)).orElse(0L);
+    }
+
+    public Long getRevenueByCourseId(Long courseId) {
+        return Optional.ofNullable(enrollmentRepository.calculateRevenueByCourseId(courseId)).orElse(0L);
+    }
+
+    public Map<String, Long> getRevenueGroupedByClass() {
+        return enrollmentRepository.revenueGroupedByClass().stream()
+                .collect(Collectors.toMap(
+                        row -> (String) row[0],
+                        row -> (Long) row[1]
+                ));
+    }
+
+    public Map<String, Long> getRevenueGroupedByCourse() {
+        return enrollmentRepository.revenueGroupedByCourse().stream()
+                .collect(Collectors.toMap(
+                        row -> (String) row[0],
+                        row -> (Long) row[1]
+                ));
     }
 }

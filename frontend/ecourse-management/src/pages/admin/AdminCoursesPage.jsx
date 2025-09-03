@@ -202,7 +202,7 @@ function AdminCoursesPage() {
                                         className="border rounded-lg p-3 flex justify-between items-center hover:bg-gray-50"
                                     >
                                         <div>
-                                            <h4 className="font-medium">{cls.name}</h4>
+                                            <h4 className="font-medium">{cls.name} - mã lớp: {cls.id}</h4>
                                             <p className="text-sm text-gray-500">{cls.description}</p>
                                             <p className="text-sm">
                                                 Cost: <span className="font-semibold">

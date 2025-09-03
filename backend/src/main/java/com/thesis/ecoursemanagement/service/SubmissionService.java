@@ -1,6 +1,5 @@
 package com.thesis.ecoursemanagement.service;
 
-import com.thesis.ecoursemanagement.dto.request.SubmissionRequest;
 import com.thesis.ecoursemanagement.dto.request.SubmitScoreRequest;
 import com.thesis.ecoursemanagement.dto.response.SubmissionResponse;
 import com.thesis.ecoursemanagement.mapper.SubmissionMapper;
@@ -73,17 +72,5 @@ public class SubmissionService {
         submission.setJudge(request.getJudge());
 
         return submissionMapper.toResponse(submissionRepository.save(submission));
-    }
-
-    public byte[] downloadFile(Long submissionId) {
-        return submissionRepository.findById(submissionId)
-                .orElseThrow(() -> new RuntimeException("Submission not found"))
-                .getFileData();
-    }
-
-    public String getFileName(Long submissionId) {
-        return submissionRepository.findById(submissionId)
-                .orElseThrow(() -> new RuntimeException("Submission not found"))
-                .getFileName();
     }
 }

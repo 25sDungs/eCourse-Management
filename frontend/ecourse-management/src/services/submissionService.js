@@ -35,10 +35,13 @@ export const submitSubmission = async (assignmentId, formData) => {
     }
 }
 
-export const getDownloadSubmission = async (assignmentId, submissionId) => {
+export const getDownloadSubmission = async (submissionId) => {
     try {
-        const response = api.get(`/api/courses/0/classes/0/assignments/${assignmentId}/submissions/${submissionId}/download`);
-        return response.data;
+        const response = api.get(`/courses/0/classes/0/assignments/0/submissions/${submissionId}/download`,
+            {
+                responseType: "blob",
+            });
+        return response;
     } catch (error) {
         throw new Error(error.response.data.message || "Download submission error!");
     }

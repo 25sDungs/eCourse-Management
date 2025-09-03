@@ -43,4 +43,28 @@ public class EnrollmentController {
     public ResponseEntity<List<EnrollmentResponse>> getAllEnrollments() {
         return ResponseEntity.ok(enrollmentService.getAllEnrollments());
     }
+
+    @GetMapping("/revenue/classes/{classId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse<Long>> getRevenueByClass(@PathVariable Long classId) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Success",enrollmentService.getRevenueByClassId(classId)));
+    }
+
+    @GetMapping("/revenue/courses/{courseId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse<Long>> getRevenueByCourse(@PathVariable Long courseId) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Success",enrollmentService.getRevenueByCourseId(courseId)));
+    }
+
+    @GetMapping("/revenue/classes")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse<Map<String, Long>>> getRevenueGroupedByClass() {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Success",enrollmentService.getRevenueGroupedByClass()));
+    }
+
+    @GetMapping("/revenue/courses")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse<Map<String, Long>>> getRevenueGroupedByCourse() {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Success",enrollmentService.getRevenueGroupedByCourse()));
+    }
 }

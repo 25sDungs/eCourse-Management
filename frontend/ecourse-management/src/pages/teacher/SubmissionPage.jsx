@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaDownload, FaSave, FaTimes } from "react-icons/fa";
-import { getSubmissionsByAssignmentId, updateSubmission } from "../../services/submissionService";
+import { getDownloadSubmission, getSubmissionsByAssignmentId, updateSubmission } from "../../services/submissionService";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -100,6 +100,31 @@ function SubmissionsPage() {
         doc.save(`assignment_${assignmentId}_${className}_bangdiem.pdf`);
     };
 
+
+    const handleDownload = async (submissionId) => {
+        try {
+            const response = await getDownloadSubmission(submissionId);
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            const contentDisposition = response.headers["content-disposition"];
+            let fileName = "downloaded-file";
+            if (contentDisposition) {
+                const match = contentDisposition.match(/filename="(.+)"/);
+                if (match.length > 1) fileName = match[1];
+            }
+            link.setAttribute("download", fileName);
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+        }
+        catch (err) {
+            console.error("Download api error:", err);
+        }
+    }
+
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
             <div className="flex justify-between items-center mb-6">
@@ -146,14 +171,12 @@ function SubmissionsPage() {
                                         {s.studentUsername}
                                     </td>
                                     <td className="py-2 px-4 border-b text-center">
-                                        <a
-                                            href={s.fileName}
-                                            target="_blank"
-                                            rel="noreferrer"
+                                        <button
+                                            onClick={() => handleDownload(s.id)}
                                             className="text-blue-600 hover:underline flex items-center gap-2 justify-center"
                                         >
                                             <FaDownload /> Tải file
-                                        </a>
+                                        </button>
                                     </td>
                                     <td className="py-2 px-4 border-b text-center">
                                         {new Date(s.submitTime).toLocaleString()}
