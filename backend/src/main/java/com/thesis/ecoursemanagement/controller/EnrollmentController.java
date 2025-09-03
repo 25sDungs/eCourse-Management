@@ -6,6 +6,7 @@ import com.thesis.ecoursemanagement.dto.response.EnrollmentResponse;
 import com.thesis.ecoursemanagement.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,5 +36,11 @@ public class EnrollmentController {
         String status = body.get("status");
         EnrollmentResponse response = enrollmentService.updateStatus(enrollmentId, status);
         return ResponseEntity.ok(new ApiResponse<>(200, "Status updated", response));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<EnrollmentResponse>> getAllEnrollments() {
+        return ResponseEntity.ok(enrollmentService.getAllEnrollments());
     }
 }

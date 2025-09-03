@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 "/api/courses/*/classes/*/assignments", "/api/courses/*/classes/*/assignments/**")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
                         .requestMatchers(HttpMethod.GET, "/api/courses/*/classes/teacher/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
+                        .requestMatchers(HttpMethod.GET, "/api/courses/*/classes/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN", "ROLE_TEACHER")
                         .requestMatchers(HttpMethod.POST, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/courses/*/classes", "/api/courses/*/classes/**").hasAuthority("ROLE_ADMIN")

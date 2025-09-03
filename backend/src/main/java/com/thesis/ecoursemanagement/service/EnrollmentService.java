@@ -50,7 +50,7 @@ public class EnrollmentService {
                 .student(student)
                 .classEntity(classEntity)
                 .enrollTime(LocalDate.now())
-                .status(request.getStatus() != null ? request.getStatus() : "ENROLLED")
+                .status(request.getStatus() != null ? request.getStatus() : "PENDING")
                 .build();
 
         return enrollmentMapper.toResponse(enrollmentRepository.save(enrollment));
@@ -61,6 +61,13 @@ public class EnrollmentService {
         return enrollmentRepository.findByStudent(student)
                 .stream()
                 .map(enrollmentMapper::toResponse)
+                .toList();
+    }
+
+    public List<EnrollmentResponse> getAllEnrollments() {
+        return enrollmentRepository.findAll()
+                .stream()
+                .map(enrollmentMapper::toResponse) // chuyển entity -> DTO
                 .toList();
     }
 

@@ -6,6 +6,8 @@ import com.thesis.ecoursemanagement.model.Submission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface SubmissionMapper {
     Submission toEntity(SubmissionRequest request);
@@ -13,4 +15,6 @@ public interface SubmissionMapper {
     @Mapping(source = "assignment.id", target = "assignmentId")
     @Mapping(source = "student.username", target = "studentUsername")
     SubmissionResponse toResponse(Submission submission);
+
+    List<SubmissionResponse> toResponseList(List<Submission> submissions);
 }

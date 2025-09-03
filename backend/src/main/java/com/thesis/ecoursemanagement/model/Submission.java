@@ -7,7 +7,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "submissions")
+@Table(name = "submissions", uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "assignment_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +17,11 @@ public class Submission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fileUrl;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] fileData;
+    private String fileName;
+
     private LocalDateTime submitTime;
     private Float score;
     private String judge;

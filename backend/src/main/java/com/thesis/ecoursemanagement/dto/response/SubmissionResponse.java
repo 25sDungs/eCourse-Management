@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class SubmissionResponse {
     private Long id;
-    private String fileUrl;
+    private String fileName;
     private LocalDateTime submitTime;
     private String studentUsername;
     private Long assignmentId;

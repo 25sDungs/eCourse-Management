@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,14 +42,21 @@ public class SubmissionService {
                 .toList();
     }
 
+    public SubmissionResponse getMySubmission(Long assignmentId) {
+        User student = getCurrentStudent();
+        return submissionRepository.findByAssignmentIdAndStudentId(assignmentId, student.getId())
+                .map(submissionMapper::toResponse)
+                .orElse(null);
+    }
 
-    public SubmissionResponse submitAssignment(Long assignmentId, SubmissionRequest request) {
+    public SubmissionResponse submitAssignment(Long assignmentId, MultipartFile file) throws IOException {
         User student = getCurrentStudent();
         Assignment assignment = assignmentTopicRepository.findById(assignmentId)
                 .orElseThrow(() -> new RuntimeException("Assignment topic not found"));
 
         Submission submission = Submission.builder()
-                .fileUrl(request.getFileUrl())
+                .fileName(file.getOriginalFilename())
+                .fileData(file.getBytes())
                 .submitTime(LocalDateTime.now())
                 .student(student)
                 .assignment(assignment)
@@ -64,5 +73,17 @@ public class SubmissionService {
         submission.setJudge(request.getJudge());
 
         return submissionMapper.toResponse(submissionRepository.save(submission));
+    }
+
+    public byte[] downloadFile(Long submissionId) {
+        return submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("Submission not found"))
+                .getFileData();
+    }
+
+    public String getFileName(Long submissionId) {
+        return submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("Submission not found"))
+                .getFileName();
     }
 }
