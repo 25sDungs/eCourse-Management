@@ -1,6 +1,7 @@
 package com.thesis.ecoursemanagement.config;
 
 import com.thesis.ecoursemanagement.repository.UserRepository;
+import com.thesis.ecoursemanagement.security.OAuth2LoginSuccessHandler;
 import com.thesis.ecoursemanagement.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2LoginSuccessHandler successHandler;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -37,7 +39,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/login", "/oauth2/**",
+                                "/api/payments", "/api/payments/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
                         .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
@@ -64,11 +67,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/enrollments/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/certifications/me", "/api/certifications/*/download").hasAuthority("ROLE_STUDENT")
                         .requestMatchers("/api/certifications/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/payments", "/api/payments/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2 -> oauth2.successHandler(successHandler));
         return http.build();
     }
 

@@ -8,9 +8,12 @@ function CourseDetailPage() {
     const { id } = useParams();
     const [courseClasses, setCourseClasses] = useState([]);
     const [courseName, setCourseName] = useState(null);
-    const [loading, setLoading] = useState(true);
 
     const handlePayment = async (classId, cost) => {
+        if (!localStorage.getItem("token")) {
+            alert("Bạn hãy đăng nhập để có thể tham gia lớp học, bạn nhé!");
+            return;
+        }
         try {
             const returnUrl = `${window.location.origin}/payment-callback?classId=${classId}`;
             await payment(classId, cost, returnUrl);
@@ -28,7 +31,6 @@ function CourseDetailPage() {
         } catch (error) {
             console.error(error);
         } finally {
-            setLoading(false);
         }
     };
     useEffect(() => {

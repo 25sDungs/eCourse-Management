@@ -24,7 +24,18 @@ function MyCoursesPage() {
         return <div className="p-6 text-center">Đang tải khóa học...</div>;
     }
 
-    if (enrollments.length === 0) {
+    if (!localStorage.getItem("token")) {
+        return (
+            <div className="p-6 text-center">
+                <Link
+                    to="/login"
+                    className="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded-lg"
+                >
+                    Đăng nhập để xem các khóa học
+                </Link>
+            </div>
+        );
+    } else if (enrollments.length === 0) {
         return (
             <div className="p-6 text-center">
                 <p>Bạn chưa tham gia khóa học nào.</p>

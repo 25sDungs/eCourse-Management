@@ -1,4 +1,3 @@
-#spring.application.name=elearningmanagement
 server:
   port: 8080
   servlet:
@@ -13,6 +12,25 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+            client-name: Google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth?prompt=select_account
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+            issuer-uri: https://accounts.google.com
 
 jwt:
   secret: "khongcongicothedientanoibuonhomnay666"

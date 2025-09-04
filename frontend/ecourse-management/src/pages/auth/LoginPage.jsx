@@ -37,6 +37,9 @@ const Login = () => {
             setLoading(false);
         }
     };
+    const handleGoogleLogin = () => {
+        window.location.href = 'http://localhost:8080/learning/oauth2/authorization/google';
+    };
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
@@ -80,11 +83,8 @@ const Login = () => {
                 </form>
                 <div className="my-6 text-center text-gray-500"><span>Hoặc đăng nhập bằng</span></div>
                 <div className="flex gap-4">
-                    <button className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition">
-                        <FaFacebookF className="text-blue-600" />
-                        Facebook
-                    </button>
-                    <button className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition">
+                    <button onClick={handleGoogleLogin}
+                        className="flex-1 flex items-center justify-center gap-4 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition">
                         <FaGoogle className="text-red-500" />
                         Google
                     </button>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaLinkedin, FaInstagram, FaTwitch } from "react-icons/fa";
+import ToTopButton from "./ToTopButton"
 function Footer() {
 
     return (
@@ -43,6 +44,7 @@ function Footer() {
             <div className="bg-gray-900 text-center py-4">
                 <p>&copy;{new Date().getFullYear()} eCourse Management</p>
             </div>
+            <ToTopButton />
         </footer>
     );
 }
