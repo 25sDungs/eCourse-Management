@@ -32,7 +32,7 @@ const Login = () => {
                 navigate("/");
             }
         } catch (error) {
-            setErrorMsg(error.message);
+            setErrorMsg("Sai thông tin đăng nhập!");
         } finally {
             setLoading(false);
         }
@@ -81,6 +81,14 @@ const Login = () => {
                         Đăng Nhập
                     </button>
                 </form>
+                <div className="text-right mt-1">
+                    <Link
+                        to="/forgot-password"
+                        className="text-sm text-blue-600 hover:underline"
+                    >
+                        Quên mật khẩu?
+                    </Link>
+                </div>
                 <div className="my-6 text-center text-gray-500"><span>Hoặc đăng nhập bằng</span></div>
                 <div className="flex gap-4">
                     <button onClick={handleGoogleLogin}

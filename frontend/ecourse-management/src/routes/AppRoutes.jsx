@@ -23,6 +23,8 @@ import AdminCoursesPage from "../pages/admin/AdminCoursesPage.jsx";
 import AdminLayout from "../layouts/AdminLayout.jsx";
 import SubmissionsPage from "../pages/teacher/SubmissionPage.jsx";
 import OAuth2Redirect from "../pages/auth/OAuth2Redirect.jsx";
+import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
+import ResetPassword from "../pages/auth/ResetPassword.jsx";
 
 function AppRoutes() {
   return (
@@ -31,6 +33,8 @@ function AppRoutes() {
 
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route element={<MainLayout />}>
         <Route path="/oauth2/redirect" element={<OAuth2Redirect />} />
