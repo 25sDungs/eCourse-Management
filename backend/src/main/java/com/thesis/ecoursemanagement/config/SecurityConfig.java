@@ -40,8 +40,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/oauth2/**","/api/auth/forgot-password","/api/auth/reset-password",
-                                "/api/payments", "/api/payments/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/oauth2/**", "/api/auth/forgot-password", "/api/auth/reset-password",
+                                "/api/payments", "/api/chat", "/api/payments/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
                         .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { getMyLearningPath, updateLearningPath, createLearningPath, deleteLearningPath } from "../../services/leaningPathService";
+import AIChat from "../../components/AIChat";
 
 
 function LearningPathsPage() {
+    const [openChat, setOpenChat] = useState(false);
     const [loading, setLoading] = useState(false);
     const [myLearningPaths, setMyLearningPaths] = useState([]);
     const [openModal, setOpenModal] = useState(false);
@@ -217,6 +219,17 @@ function LearningPathsPage() {
                     </div>
                 </div>
             )}
+
+            {/*  Chat Widget  */}
+            <div className="fixed bottom-6 right-6 w-80 bg-white rounded-xl shadow-lg flex flex-col z-50">
+                <div
+                    className="bottom-6 right-6 bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer"
+                    onClick={() => setOpenChat(!openChat)}
+                >
+                    {openChat ? "Thu gọn Chat" : "Hỏi AI"}
+                </div>
+                <AIChat openChat={openChat} />
+            </div>
         </div>
     );
 }
