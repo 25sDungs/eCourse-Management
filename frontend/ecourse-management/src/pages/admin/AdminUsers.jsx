@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUsers, deleteUser } from "../../services/userService.js";
+import { getUsers, deleteUser, updateRole } from "../../services/userService.js";
 import AdminHeader from "../../components/AdminHeader.jsx";
 
 
@@ -10,7 +10,7 @@ const UsersPage = () => {
     const [page, setPage] = useState(0);
     const [size] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
-
+    const [userRoles, setUserRoles] = useState({});
     const fetchUsers = async (pageNumber = 0) => {
         try {
             const data = await getUsers(pageNumber, size);
@@ -37,7 +37,23 @@ const UsersPage = () => {
             }
         }
     };
-
+    const handleRoleChange = (userId, newRole) => {
+        setUserRoles((prev) => ({
+            ...prev,
+            [userId]: newRole,
+        }));
+    };
+    const handleSaveRole = async (userId) => {
+        const roleToUpdate = userRoles[userId];
+        if (!roleToUpdate) return;
+        try {
+            await updateRole(userId, roleToUpdate);
+            alert("Đã cập nhật role");
+        } catch (error) {
+            console.error(error);
+            alert("Lỗi gọi api cập nhật role ");
+        }
+    };
     const filteredUsers = users.filter(
         (user) =>
             user.username.toLowerCase().includes(search.toLowerCase()) ||
@@ -74,6 +90,7 @@ const UsersPage = () => {
                                 <th className="px-6 py-3">ID</th>
                                 <th className="px-6 py-3">Họ Tên</th>
                                 <th className="px-6 py-3">Tên đăng nhập</th>
+                                <th className="px-6 py-3">Vai trò</th>
                                 <th className="px-6 py-3">Dob</th>
                                 <th className="px-6 py-3 text-center">Hành động</th>
                             </tr>
@@ -85,10 +102,29 @@ const UsersPage = () => {
                                         <td className="px-6 py-3">{user.id}</td>
                                         <td className="px-6 py-3">{user.firstName + " " + user.lastName}</td>
                                         <td className="px-6 py-3">{user.username}</td>
+                                        <td className="px-6 py-3">
+                                            <select
+                                                className="border rounded px-2 py-1"
+                                                value={userRoles[user.id] || user.role}
+                                                onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                            >
+                                                <option value="ROLE_STUDENT">ROLE_STUDENT</option>
+                                                <option value="ROLE_TEACHER">ROLE_TEACHER</option>
+                                                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                            </select>
+                                        </td>
                                         <td className="px-6 py-3">{user.dob}</td>
-                                        <td className="px-6 py-3 text-center">
-                                            <button className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
-                                                onClick={() => handleDelete(user.id)}>
+                                        <td className="px-6 py-3 text-center space-x-2">
+                                            <button
+                                                className="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600"
+                                                onClick={() => handleSaveRole(user.id)}
+                                            >
+                                                Lưu
+                                            </button>
+                                            <button
+                                                className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                                                onClick={() => handleDelete(user.id)}
+                                            >
                                                 Xóa
                                             </button>
                                         </td>

@@ -1,9 +1,11 @@
 package com.thesis.ecoursemanagement.controller;
 
+import com.thesis.ecoursemanagement.dto.request.UserRoleRequest;
 import com.thesis.ecoursemanagement.dto.response.ApiResponse;
 import com.thesis.ecoursemanagement.dto.request.UserCreateRequest;
 import com.thesis.ecoursemanagement.dto.request.UserUpdateRequest;
 import com.thesis.ecoursemanagement.dto.response.UserResponse;
+import com.thesis.ecoursemanagement.model.RoleName;
 import com.thesis.ecoursemanagement.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -59,5 +62,16 @@ public class UserController {
     String deleteUser(@PathVariable("userId") String userId) {
         userService.deleteUser(userId);
         return "User đã bị xóa";
+    }
+
+    @PutMapping("/{id}/roles")
+    public ApiResponse<UserResponse> updateUserRoles(
+            @PathVariable String id,
+            @RequestBody UserRoleRequest request
+    ) {
+        return ApiResponse.<UserResponse>builder()
+                .codeResponse(200)
+                .result(userService.updateUserRoles(id, request.getRoleName()))
+                .build();
     }
 }

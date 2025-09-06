@@ -67,3 +67,12 @@ export const getUsers = async (page = 0, size = 10) => {
     const res = await api.get("/users", { params: { page, size } });
     return res.data;
 };
+
+export const updateRole = async (id, roleName) => {
+    try {
+        const response = await api.put(`/users/${id}/roles`, { roleName });
+        return response.data;
+    } catch (error) {
+        throw new Error(error || "Lỗi cập nhật role");
+    }
+};

@@ -97,4 +97,15 @@ public class UserService {
     public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
+
+    public UserResponse updateUserRoles(String userId, RoleName roleName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Role r = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.getRoles().clear();
+        user.getRoles().add(r);
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
 }

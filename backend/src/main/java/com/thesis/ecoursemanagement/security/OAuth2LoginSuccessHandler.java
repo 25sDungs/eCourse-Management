@@ -28,20 +28,20 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                                         Authentication authentication) throws IOException {
         DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
+        Role defaultRole = roleRepository.findByName(RoleName.ROLE_STUDENT)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
         String email = oAuth2User.getAttribute("email");
         User user = userRepository.findByEmail(email)
                 .orElseGet(() -> {
                     User newUser = new User();
                     newUser.setEmail(email);
-                    newUser.setUsername(email); // hoặc generate username khác
+                    newUser.setUsername(email); 
                     newUser.setFirstName(oAuth2User.getAttribute("given_name"));
                     newUser.setLastName(oAuth2User.getAttribute("family_name"));
                     newUser.setAvatarUrl(oAuth2User.getAttribute("picture"));
+                    newUser.getRoles().add(defaultRole);
                     return userRepository.save(newUser);
                 });
-        Role defaultRole = roleRepository.findByName(RoleName.ROLE_STUDENT)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        user.getRoles().add(defaultRole);
 
         String token = jwtService.generateToken(user);
 //        Cookie tokenCookie = new Cookie("jwtToken", token);

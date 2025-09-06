@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +26,7 @@ public class PasswordResetToken {
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     private LocalDateTime expiryDate;
