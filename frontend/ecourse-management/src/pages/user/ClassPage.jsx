@@ -48,6 +48,10 @@ function ClassPage() {
     };
 
     const handleOpenAssignment = async (id) => {
+        if (openAssignment === id) {
+            handleCloseAssignment();
+            return;
+        }
         setOpenAssignment(id);
         try {
             const data = await getMySubmission(id);
@@ -221,7 +225,7 @@ function ClassPage() {
                                             onClick={() => handleOpenAssignment(a.id)}
                                             className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                                         >
-                                            Nộp bài
+                                            Xem bài nộp
                                         </button>
 
                                         {/* Form nộp bài hoặc trạng thái nộp */}
@@ -229,26 +233,35 @@ function ClassPage() {
                                             <div className="mt-4 border-t pt-4 space-y-3 animate-fadeInDown">
                                                 {assignmentStatus === null ? (
                                                     <>
-                                                        <input
-                                                            type="file"
-                                                            onChange={(e) => setFile(e.target.files[0])}
-                                                            className="block w-full text-sm text-gray-600"
-                                                        />
-                                                        <div className="flex gap-2">
-                                                            <button
-                                                                onClick={() => handleSubmit(a.id)}
-                                                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-transform duration-200 hover:scale-105"
-                                                            >
-                                                                Xác nhận nộp
-                                                            </button>
-                                                            <button
-                                                                onClick={handleCloseAssignment}
-                                                                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-transform duration-200 hover:scale-105"
-                                                            >
-                                                                Hủy
-                                                            </button>
-                                                        </div>
-                                                        {message && <p className="text-sm mt-2">{message}</p>}
+                                                        {a.dueDate && new Date() > new Date(a.dueDate) ? (
+                                                            <p className="text-red-600 font-medium">
+                                                                Đã quá hạn nộp (hạn:{" "}
+                                                                {new Date(a.dueDate).toLocaleString("vi-VN")})
+                                                            </p>
+                                                        ) : (
+                                                            <>
+                                                                <input
+                                                                    type="file"
+                                                                    onChange={(e) => setFile(e.target.files[0])}
+                                                                    className="block w-full text-sm text-gray-600"
+                                                                />
+                                                                <div className="flex gap-2">
+                                                                    <button
+                                                                        onClick={() => handleSubmit(a.id)}
+                                                                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-transform duration-200 hover:scale-105"
+                                                                    >
+                                                                        Nộp bài
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={handleCloseAssignment}
+                                                                        className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-transform duration-200 hover:scale-105"
+                                                                    >
+                                                                        Hủy
+                                                                    </button>
+                                                                </div>
+                                                                {message && <p className="text-sm mt-2">{message}</p>}
+                                                            </>
+                                                        )}
                                                     </>
                                                 ) : (
                                                     <>
@@ -282,9 +295,9 @@ function ClassPage() {
                                                                 </p>
                                                             )}
 
-                                                            {assignmentStatus.teacherComment && (
+                                                            {assignmentStatus.judge && (
                                                                 <p className="text-sm italic text-gray-700">
-                                                                    Nhận xét: "{assignmentStatus.teacherComment}"
+                                                                    Nhận xét: "{assignmentStatus.judge}"
                                                                 </p>
                                                             )}
                                                         </div>

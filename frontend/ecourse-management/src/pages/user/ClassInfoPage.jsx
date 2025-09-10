@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FaBook, FaCalendarAlt, FaUserTie, FaMoneyBillWave } from "react-icons/fa";
 import { getUserById } from "../../services/userService";
 import { payment } from "../../services/paymentService";
+import PrevButton from "../../components/PrevButton";
 
 function ClassInfoPage() {
     const navigate = useNavigate();
@@ -107,17 +108,17 @@ function ClassInfoPage() {
                 </div>
 
                 <div className="mt-8 flex justify-between">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
-                    >
-                        ⬅ Quay lại
-                    </button>
-                    <button onClick={() => handlePayment(classId, classData.cost)}
-                        className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-md">
-                        🚀 Đăng ký ngay
-                    </button>
-
+                    <PrevButton className="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 shadow-md" />
+                    {new Date() > new Date(classData.endDate) ? (
+                        <p className="mt-4 text-red-600 font-medium">
+                            Lớp học đã kết thúc!
+                        </p>
+                    ) : (
+                        <button onClick={() => handlePayment(classId, classData.cost)}
+                            className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-md">
+                            🚀 Đăng ký ngay
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

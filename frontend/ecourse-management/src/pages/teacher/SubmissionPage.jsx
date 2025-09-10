@@ -4,6 +4,7 @@ import { getDownloadSubmission, getSubmissionsByAssignmentId, updateSubmission }
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import PrevButton from "../../components/PrevButton";
 
 function SubmissionsPage() {
     const { assignmentId, className } = useParams();
@@ -128,8 +129,9 @@ function SubmissionsPage() {
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
             <div className="flex justify-between items-center mb-6">
+                <PrevButton className="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 shadow-md" />
                 <h1 className="text-2xl font-bold">
-                    Danh sách bài nộp – Assignment {assignmentId} lớp {className}
+                    Danh sách bài nộp – bài tập {assignmentId} lớp: {className}
                 </h1>
                 <div className="flex gap-2">
                     <button
