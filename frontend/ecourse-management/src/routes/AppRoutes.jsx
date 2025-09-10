@@ -25,6 +25,7 @@ import SubmissionsPage from "../pages/teacher/SubmissionPage.jsx";
 import OAuth2Redirect from "../pages/auth/OAuth2Redirect.jsx";
 import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
 import ResetPassword from "../pages/auth/ResetPassword.jsx";
+import ClassInfoPage from "../pages/user/ClassInfoPage.jsx";
 
 function AppRoutes() {
   return (
@@ -43,6 +44,7 @@ function AppRoutes() {
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
         <Route path="/courses/:courseId/classes/:classId" element={<ClassPage />} />
+        <Route path="/courses/:courseId/info/:classId" element={<ClassInfoPage />} />
         <Route path="/payment-callback" element={<PaymentCallbackPage />} />
         <Route path="/my-courses" element={<MyCoursesPage />} />
         <Route path="/profile" element={<ProfilePage />} />

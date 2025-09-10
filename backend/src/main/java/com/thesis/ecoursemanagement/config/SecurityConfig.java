@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login", "/oauth2/**", "/api/auth/forgot-password", "/api/auth/reset-password",
                                 "/api/payments", "/api/chat", "/api/payments/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
+                        .requestMatchers(HttpMethod.GET, "/api/users/me","/api/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
                         .requestMatchers(HttpMethod.PATCH, "/api/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER")
                         .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/learning-paths", "/api/learning-paths/**").hasAuthority("ROLE_STUDENT")

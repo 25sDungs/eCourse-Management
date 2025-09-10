@@ -76,3 +76,8 @@ export const updateRole = async (id, roleName) => {
         throw new Error(error || "Lỗi cập nhật role");
     }
 };
+
+export const getUserById = async (id) => {
+    const res = await api.get(`/users/${id}`);
+    return res.data;
+};

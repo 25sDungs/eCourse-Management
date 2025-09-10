@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCourseById } from "../../services/courseService";
 import { payment } from "../../services/paymentService";
+import { Link } from "react-router-dom";
 
 
 function CourseDetailPage() {
@@ -27,7 +28,6 @@ function CourseDetailPage() {
             const data = await getCourseById(id);
             setCourseClasses(data.result.classes);
             setCourseName(data.result.courseName)
-            console.log(data.result);
         } catch (error) {
             console.error(error);
         } finally {
@@ -54,9 +54,12 @@ function CourseDetailPage() {
                         <p className="text-gray-600">{courseclass.startDate}</p>
                     </div>
                     <div className="flex justify-evenly">
-                        <button className=" bg-green-400 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                        <Link
+                            to={`/courses/${id}/info/${courseclass.id}`}
+                            className=" bg-green-400 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                        >
                             Xem chi tiết
-                        </button>
+                        </Link>
                         <button onClick={() => handlePayment(courseclass.id, courseclass.cost)}
                             className=" bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
                             Tham Gia Lớp

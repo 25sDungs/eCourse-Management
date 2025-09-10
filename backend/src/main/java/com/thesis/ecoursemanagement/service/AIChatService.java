@@ -18,6 +18,7 @@ public class AIChatService {
     public String chat(AIChatRequest request) {
         SystemMessage systemMessage = new SystemMessage("""
                 Bạn là trợ lý giúp học viên giải đáp các thắc mắc vấn đề về hệ thống khóa học eCourse.
+                Câu trả lời thường sẽ bao gồm mốc thời gian bắt đầu và kết thúc
                 Trả lời đúng trọng tâm câu hỏi.
                 Trả lời trong câu hỏi trong khoảng 50-100 từ.
                 """);

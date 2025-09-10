@@ -17,6 +17,7 @@ public class ClassEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
     private Long cost;
     private String description;
