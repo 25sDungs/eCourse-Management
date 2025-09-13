@@ -58,7 +58,8 @@ function Header() {
                     onClick={() => setMenuOpen(!menuOpen)}
                 >
                     {avtUrl ? (
-                        <img src={avtUrl} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
+                        <img src={avtUrl} referrerPolicy="no-referrer"
+                         alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
                     ) : (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

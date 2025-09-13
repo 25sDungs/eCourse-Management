@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaChalkboardTeacher, FaTasks, FaPlus, FaCalendarAlt, FaBook, FaEdit, FaTrash } from "react-icons/fa";
+import { FaChalkboardTeacher, FaTasks, FaPlus, FaCalendarAlt, FaBook, FaEdit, FaTrash, FaUserFriends, FaUser } from "react-icons/fa";
 import { getTeacherClass } from "../../services/classService";
 import { currentUserInfo } from "../../services/userService";
 import {
@@ -7,6 +7,7 @@ import {
   updateAssignments, delAssignments, updateClassContents, delClassContents
 } from "../../services/classContentService"
 import { Link } from "react-router-dom";
+import { getStudents } from "../../services/enrollClassService";
 
 const TeacherDashboard = () => {
   const token = localStorage.getItem("token");
@@ -33,6 +34,8 @@ const TeacherDashboard = () => {
     startDate: "",
     dueDate: "",
   });
+
+  const [studentsData, setStudentData] = useState([]);
 
   const handleAddContent = async (classId) => {
     setLoading(true);
@@ -174,6 +177,20 @@ const TeacherDashboard = () => {
     }
   }
 
+  const fetchStudentData = async (id) => {
+    setLoading(true);
+    try {
+      const data = await getStudents(id);
+      setStudentData(data || []);
+    }
+    catch (error) {
+      console.log("Lỗi gọi api lấy học viên: ", error);
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
   const getIdUser = async () => {
     if (token) {
       try {
@@ -186,7 +203,7 @@ const TeacherDashboard = () => {
   }
 
   const handleChangeClassData = (id) => {
-    setSelectedClass(id)
+    setSelectedClass(id);
     fetchClassContents(id);
     fetchAssignments(id);
   }
@@ -204,6 +221,12 @@ const TeacherDashboard = () => {
       fetchTeacherClasses();
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (tab === "student") {
+      fetchStudentData(selectedClass);
+    }
+  }, [tab]);
 
 
   const searchHandle = (classes, keyword) => {
@@ -310,6 +333,16 @@ const TeacherDashboard = () => {
               >
                 <FaTasks className="inline mr-2" />
                 Bài tập
+              </button>
+              <button
+                onClick={() => setTab("student")}
+                className={`px-4 py-2 font-medium ${tab === "student"
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+                  }`}
+              >
+                <FaUserFriends className="inline mr-2" />
+                Các học viên
               </button>
             </div>
 
@@ -423,10 +456,55 @@ const TeacherDashboard = () => {
                         <h3 className="font-semibold">Chưa có bài tập được giao</h3>
                       </li>
                     )}
-
                 </ul>
               </div>
             )}
+
+            {/* Tab học viên trong lớp học */}
+
+            {tab === "student" && (
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold">Danh sách học viên</h2>
+                  <span className="text-gray-700 text-lg">
+                    Tổng số: {studentsData.length} học viên
+                  </span>
+                </div>
+
+                {studentsData.length > 0 ? (
+                  <div className="space-y-3">
+                    {studentsData.map((s) => (
+                      <div
+                        key={s.id}
+                        className="flex items-center justify-between w-full p-4 bg-white border rounded-xl shadow-sm hover:shadow-md transition"
+                      >
+
+                        <div className="flex items-center gap-4">
+
+                          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-50 text-blue-500 font-bold">
+                            <FaUser />
+                          </div>
+
+                          <div>
+                            <h3 className="font-semibold text-gray-800">
+                              Họ Tên: {s.lastName} {s.firstName}
+                            </h3>
+                            <p className="text-sm text-gray-600">Học viên: {s.username}</p>
+                            <p className="text-sm text-gray-500">Email liên lạc: {s.email}</p>
+                          </div>
+                        </div>
+
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-6 text-center rounded-xl border bg-gray-50 text-gray-500">
+                    Lớp học hiện chưa có học viên tham gia
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Modal Thêm Content */}
             {openContentModal && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

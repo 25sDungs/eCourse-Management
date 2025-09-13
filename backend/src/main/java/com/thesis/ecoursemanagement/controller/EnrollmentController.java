@@ -3,6 +3,7 @@ package com.thesis.ecoursemanagement.controller;
 import com.thesis.ecoursemanagement.dto.request.EnrollmentRequest;
 import com.thesis.ecoursemanagement.dto.response.ApiResponse;
 import com.thesis.ecoursemanagement.dto.response.EnrollmentResponse;
+import com.thesis.ecoursemanagement.dto.response.StudentsEnrollResponse;
 import com.thesis.ecoursemanagement.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,13 @@ public class EnrollmentController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<EnrollmentResponse>> getAllEnrollments() {
         return ResponseEntity.ok(enrollmentService.getAllEnrollments());
+    }
+
+    @GetMapping("/{classId}/students")
+    @PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+    public ResponseEntity<List<StudentsEnrollResponse>> getStudentsByClass(@PathVariable Long classId) {
+        List<StudentsEnrollResponse> students = enrollmentService.getStudentsByClassId(classId);
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/revenue/classes/{classId}")

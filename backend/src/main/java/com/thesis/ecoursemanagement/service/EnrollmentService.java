@@ -2,6 +2,7 @@ package com.thesis.ecoursemanagement.service;
 
 import com.thesis.ecoursemanagement.dto.request.EnrollmentRequest;
 import com.thesis.ecoursemanagement.dto.response.EnrollmentResponse;
+import com.thesis.ecoursemanagement.dto.response.StudentsEnrollResponse;
 import com.thesis.ecoursemanagement.mapper.EnrollmentMapper;
 import com.thesis.ecoursemanagement.model.Certification;
 import com.thesis.ecoursemanagement.model.ClassEntity;
@@ -121,5 +122,17 @@ public class EnrollmentService {
                         row -> (String) row[0],
                         row -> (Long) row[1]
                 ));
+    }
+
+    public List<StudentsEnrollResponse> getStudentsByClassId(Long classId) {
+        return enrollmentRepository.findByClassEntityId(classId).stream()
+                .map(e -> new StudentsEnrollResponse(
+                        e.getStudent().getId(),
+                        e.getStudent().getUsername(),
+                        e.getStudent().getFirstName(),
+                        e.getStudent().getLastName(),
+                        e.getStudent().getEmail()
+                ))
+                .toList();
     }
 }

@@ -43,3 +43,13 @@ export const updateEnrollStatus = async (id, status) => {
     }
 };
 
+export const getStudents = async (id) => {
+    try {
+        const res = await api.get(`/enrollments/${id}/students`);
+        return res.data;
+    } catch (err) {
+        console.error("Lỗi lấy dữ liệu học viên:", err);
+        throw err;
+    }
+};
+
