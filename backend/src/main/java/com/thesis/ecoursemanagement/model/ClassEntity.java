@@ -1,0 +1,37 @@
+package com.thesis.ecoursemanagement.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Table(name = "classes")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ClassEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private String name;
+    private Long cost;
+    private String description;
+
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private User teacher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+    @OneToMany(mappedBy = "classEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClassContent> lessons;
+}

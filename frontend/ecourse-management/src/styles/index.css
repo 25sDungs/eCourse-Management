@@ -1,0 +1,48 @@
+@import './variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.container {
+  @apply bg-white p-5 rounded-lg shadow-lg w-80 text-center mx-auto mt-12;
+}
+
+.container h2 {
+  @apply mb-5 text-2xl font-bold;
+}
+
+.container input {
+  @apply w-full p-2 my-2 border border-gray-300 rounded;
+}
+
+.container button {
+  @apply w-full p-2 bg-blue-600 text-white border-none rounded cursor-pointer;
+}
+
+.container button:hover {
+  @apply bg-blue-700;
+}
+
+.container p {
+  @apply mt-2;
+}
+
+.container a {
+  @apply text-blue-600 no-underline;
+}
+
+.container a:hover {
+  @apply underline;
+}
