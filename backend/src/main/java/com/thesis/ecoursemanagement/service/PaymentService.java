@@ -1,5 +1,8 @@
 package com.thesis.ecoursemanagement.service;
 
+import com.thesis.ecoursemanagement.model.PaymentTransaction;
+import com.thesis.ecoursemanagement.repository.PaymentTransactionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
     @Value("${vnpay.tmnCode}")
     private String vnpTmnCode;
@@ -18,6 +22,7 @@ public class PaymentService {
 
     @Value("${vnpay.payUrl}")
     private String vnpPayUrl;
+    private final PaymentTransactionRepository paymentTransactionRepository;
 
     public String createPaymentUrl(Long amount, String returnUrl, Long classId) {
         String vnp_OrderInfo = "Thanh toan khoa hoc, classId: " + classId;
@@ -55,6 +60,14 @@ public class PaymentService {
 
         String secureHash = hmacSHA512(vnpHashSecret, hashData.toString());
         query.append("&vnp_SecureHash=").append(secureHash);
+
+        PaymentTransaction t = new PaymentTransaction();
+        t.setTxnRef(vnp_TxnRef);
+        t.setUserId("test");
+        t.setCourseClassId(classId);
+        t.setAmount(amount);
+        t.setStatus("");
+        paymentTransactionRepository.save(t);
 
         return vnpPayUrl + "?" + query.toString();
     }

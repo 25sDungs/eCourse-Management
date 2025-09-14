@@ -9,6 +9,8 @@ function RegisterPage() {
     const [form, setForm] = useState({
         username: "",
         password: "",
+        confirmPassword: "",
+        email: "",
         firstName: "",
         lastName: "",
         dob: "",
@@ -25,13 +27,18 @@ function RegisterPage() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Ngăn refresh trang lại
+        e.preventDefault();
+        if (form.password !== form.confirmPassword) {
+            alert("Mật khẩu nhập lại không khớp!");
+            return;
+        }
         setLoading(true);
-        console.log("Form đăng ký:", form); const formData = new FormData();
+        const formData = new FormData();
         formData.append("username", form.username);
         formData.append("password", form.password);
         formData.append("lastName", form.lastName);
         formData.append("firstName", form.firstName);
+        formData.append("email", form.email);
         formData.append("dob", form.dob);
         if (form.avatar) {
             formData.append("avatar", form.avatar);
@@ -47,23 +54,35 @@ function RegisterPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
-            <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
+            <div className="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8">
                 <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
                     Đăng ký tài khoản
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-
-                    <div>
-                        <label className="block mb-1 text-gray-600">Tên đăng nhập</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={form.username}
-                            onChange={handleChange}
-                            required
-                            className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 outline-none"
-                        />
+                    <div className="flex gap-4">
+                        <div className="flex-1">
+                            <label className="block mb-1 text-gray-600">Tên đăng nhập</label>
+                            <input
+                                type="text"
+                                name="username"
+                                value={form.username}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 outline-none"
+                            />
+                        </div>
+                        <div className="flex-1">
+                            <label className="block mb-1 text-gray-600">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={form.email}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 outline-none"
+                            />
+                        </div>
                     </div>
                     <div className="flex gap-4">
                         <div className="flex-1">
@@ -108,6 +127,18 @@ function RegisterPage() {
                             type="password"
                             name="password"
                             value={form.password}
+                            onChange={handleChange}
+                            required
+                            className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 outline-none"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-gray-600">Nhập lại mật khẩu</label>
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            value={form.confirmPassword}
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 outline-none"

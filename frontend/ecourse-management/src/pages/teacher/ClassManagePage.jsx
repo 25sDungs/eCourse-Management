@@ -81,7 +81,7 @@ const TeacherDashboard = () => {
       const startDate = editAssignment.startDate;
       const dueDate = editAssignment.dueDate;
       await updateAssignments(0, classId, editAssignment.id, { title, description, startDate, dueDate });
-      setAssignments(assignments.map((a) => (a.id === editAssignment.id ? { title, description, startDate, dueDate } : a)));
+      fetchAssignments(classId);
     }
     catch (err) {
       console.error("Lỗi khi gọi api chỉnh sửa bài tập", err)
@@ -98,7 +98,7 @@ const TeacherDashboard = () => {
       const title = editContent.title;
       const content = editContent.content;
       await updateClassContents(0, classId, editContent.id, { title, content });
-      setClassContents(classContents.map((c) => (c.id === editContent.id ? { title, content } : c)));
+      fetchClassContents(classId);
     }
     catch (err) {
       console.error("Lỗi khi gọi api cập nhật nội dung bài học", err)
@@ -234,10 +234,6 @@ const TeacherDashboard = () => {
     return classes.filter((c) =>
       c.name.toLowerCase().includes(keyword.toLowerCase())
     );
-  };
-
-  const handleEdit = (cls) => {
-    setEditingClass(cls);// chưa làm edit
   };
 
   const [searchFilter, setSearchFilter] = useState("");

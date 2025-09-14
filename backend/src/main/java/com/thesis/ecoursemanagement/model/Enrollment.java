@@ -31,5 +31,6 @@ public class Enrollment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ClassEntity classEntity;
 }
